@@ -1,15 +1,12 @@
-# This file is a template, and might need editing before it works on your project.
-# use the official gcc image, based on debian
-# can use verions as well, like gcc:5.2
-# see https://hub.docker.com/_/gcc/
-image: gcc
+language: cpp
+compiler: gcc
 
 build:
   stage: build
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
   
-  before_script: 
+  before_install:
     - add-apt-repository ppa:mc3man/mpv-tests
     - apt-get -qq update
     - apt-get install mpv
