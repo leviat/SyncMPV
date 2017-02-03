@@ -10,6 +10,12 @@
 
 #include <QtGui/QOpenGLFramebufferObject>
 
+/*!
+ * \class MpvRenderer
+ *
+ * \brief Draws the video frames into the framebuffer
+ */
+
 void *MpvRenderer::get_proc_address(void *ctx, const char *name) {
     (void)ctx;
     QOpenGLContext *glctx = QOpenGLContext::currentContext();

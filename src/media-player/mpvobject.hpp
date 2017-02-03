@@ -24,9 +24,9 @@
 class MpvObject : public QQuickFramebufferObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString playtime READ getPlaytime NOTIFY playtimeChanged)
-    Q_PROPERTY(double percentPlaytime READ getPercentPlaytime NOTIFY playtimeChanged)
-    Q_PROPERTY(double volume READ getVolume NOTIFY volumeChanged)
+    Q_PROPERTY(QString playtime READ playtime NOTIFY playtimeChanged)
+    Q_PROPERTY(double percentPlaytime READ percentPlaytime NOTIFY playtimeChanged)
+    Q_PROPERTY(double volume READ volume NOTIFY volumeChanged)
 
     friend class MpvRenderer;
 
@@ -47,9 +47,9 @@ public:
     MpvObject(QQuickItem * parent = 0);
     virtual ~MpvObject();
     virtual Renderer *createRenderer() const;
-    QString getPlaytime();
-    double getVolume();
-    double getPercentPlaytime();
+    QString playtime();
+    double volume();
+    double percentPlaytime();
 
 private:
     static void on_update(void *ctx);

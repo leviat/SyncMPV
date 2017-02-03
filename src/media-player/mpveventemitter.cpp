@@ -1,6 +1,11 @@
 #include "mpveventemitter.hpp"
 #include <media-player/mpvobject.hpp>
 
+/*!
+ * \brief MpvEventEmitter::MpvEventEmitter constructs a QThread which will forward the mpv events to the signal-slot system.
+ * \param mpv The actual mpv-player as handle
+ * \param mpvObject The controller class for the GUI
+ */
 MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
 {
     this->mpv = mpv;
@@ -19,6 +24,10 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
 
 }
 
+/*!
+ * \brief MpvEventEmitter::run polls mpv events and forwards them to the signal-slot system.
+ * Can be terminated with initiateShutdown()
+ */
 void MpvEventEmitter::run(){
     while (!shutdown) {
         mpv_event *event = mpv_wait_event(mpv, 0.5);
@@ -34,6 +43,9 @@ void MpvEventEmitter::run(){
     }
 }
 
+/*!
+ * \brief MpvEventEmitter::initiateShutdown terminates the thread as soon as it finishes processing the current event
+ */
 void MpvEventEmitter::initiateShutdown() {
     shutdown = true;
 }

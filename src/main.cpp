@@ -16,13 +16,6 @@
 
 
 
-QQuickFramebufferObject::Renderer *MpvObject::createRenderer() const
-{
-    window()->setPersistentOpenGLContext(true);
-    window()->setPersistentSceneGraph(true);
-    return new MpvRenderer(this);
-}
-
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
