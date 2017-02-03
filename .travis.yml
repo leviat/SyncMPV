@@ -1,13 +1,17 @@
 language: cpp
 compiler: gcc
 sudo: required
-dist: xenial
+dist: trusty
 
 before_install:
-- sudo add-apt-repository ppa:mc3man/mpv-tests -y
-- sudo apt-get update
-- sudo apt-get install libmpv
-- sudo apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
+- su
+- apt-get -qq install -y gdebi
+- wget "http://www.deb-multimedia.org/pool/main/m/mpv-dmo/mpv_0.23.0-dmo2_amd64.deb" -qO mpv.deb
+- gdebi mpv.deb
+- rm mpv.deb
+- apt-get update
+- apt-get install libmpv
+- apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
 
 script:
 - mkdir build
