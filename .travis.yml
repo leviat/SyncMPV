@@ -5,8 +5,8 @@ dist: trusty
 
 before_install:
     - sudo add-apt-repository ppa:mc3man/testing6 -y
-    - sudo apt-get update
-    - sudo apt-get install -y libmpv-dev
+    - sudo apt-get -qq update
+    - sudo apt-get -qq install -y libmpv-dev
     - sudo apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
 
 script:
