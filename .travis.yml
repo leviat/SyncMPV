@@ -10,7 +10,7 @@ before_install:
 - ./rebuild -j4
 - sudo ./install
 - cd ..
-- apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
+- sudo apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
 
 script:
 - mkdir build
