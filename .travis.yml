@@ -1,12 +1,12 @@
 language: cpp
 compiler: gcc
 sudo: required
-dist: trusty
+dist: xenial
 
 before_install:
 - sudo add-apt-repository ppa:mc3man/mpv-tests -y
 - sudo apt-get update
-- sudo apt-get install mpv
+- sudo apt-get install libmpv
 - sudo apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
 
 script:
