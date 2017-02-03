@@ -12,9 +12,10 @@
 #include <QtQuick/QQuickFramebufferObject>
 
 //libmpv
-#include <mpv/client.h>
-#include <mpv/opengl_cb.h>
-#include <mpv/qthelper.hpp>
+#include <client.h>
+#include <opengl_cb.h>
+#include <qthelper.hpp>
+
 
 /*====================================================================*/
 /* CLASS DEFINITIONS                                                                                      */

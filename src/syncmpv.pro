@@ -19,7 +19,8 @@ SOURCES += \
 DISTFILES += \
     view/main.qml \
     ../.travis.yml \
-    ../.gitignore
+    ../.gitignore \
+    ../README.md
 
 
 win32: LIBS += -L$$PWD/../libmpv/ -lmpv
