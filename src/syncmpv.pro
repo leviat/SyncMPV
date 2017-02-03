@@ -18,7 +18,7 @@ SOURCES += \
 
 DISTFILES += \
     view/main.qml \
-    ../.gitlab-ci.yml \
+    ../.travis.yml \
     ../.gitignore
 
 

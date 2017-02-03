@@ -10,14 +10,9 @@ build:
   # install the necessary build tools when needed
   
   before_script: 
-    - sed -i -e 's/ \(stable\|jessie\)/ testing/ig' /etc/apt/sources.list
+    - add-apt-repository ppa:mc3man/mpv-tests
     - apt-get -qq update
-#    - apt-get --download-only -qq dist-upgrade
-#    - apt-get -qq dist-upgrade
-    - apt-get -qq install -y gdebi
-    - wget "http://www.deb-multimedia.org/pool/main/m/mpv-dmo/mpv_0.23.0-dmo2_amd64.deb" -qO mpv.deb
-    - gdebi mpv.deb
-    - rm mpv.deb
+    - apt-get install mpv
     - apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
   
   script: 
