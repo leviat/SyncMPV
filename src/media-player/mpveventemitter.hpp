@@ -9,15 +9,10 @@
 #include <qthread.h>
 
 //libmpv
-#ifdef _WIN32
-    #include <client.h>
-    #include <opengl_cb.h>
-    #include <qthelper.hpp>
-#else
-    #include <mpv/client.h>
-    #include <mpv/opengl_cb.h>
-    #include <mpv/qthelper.hpp>
-#endif
+#include <client.h>
+#include <opengl_cb.h>
+#include <qthelper.hpp>
+
 
 class MpvObject;
 

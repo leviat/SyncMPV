@@ -4,12 +4,9 @@ sudo: required
 dist: trusty
 
 before_install:
+- sudo add-apt-repository ppa:mc3man/mpv-tests -y
 - sudo apt-get update
-- git clone https://github.com/mpv-player/mpv-build.git
-- cd mpv-build
-- ./rebuild -j4
-- sudo ./install
-- cd ..
+- sudo apt-get install -y mpv
 - sudo apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
 
 script:
