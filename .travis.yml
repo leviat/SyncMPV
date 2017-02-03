@@ -1,25 +1,14 @@
 language: cpp
 compiler: gcc
-
-build:
-  stage: build
-  # instead of calling g++ directly you can also use some build toolkit like make
-  # install the necessary build tools when needed
   
-  before_install:
-    - add-apt-repository ppa:mc3man/mpv-tests
-    - apt-get -qq update
-    - apt-get install mpv
-    - apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
-  
-  script: 
-    - mkdir build
-    - cd build
-    - qmake ../src/syncmpv.pro
-    - make
+before_install:
+- add-apt-repository ppa:mc3man/mpv-tests
+- apt-get -qq update
+- apt-get install mpv
+- apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
 
-# run tests using the binary built before
-#test:
-#  stage: test
-#  script:
-#    - ./runmytests.sh
+script:
+- mkdir build
+- cd build
+- qmake ../src/syncmpv.pro
+- make
