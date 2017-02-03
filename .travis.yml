@@ -3,7 +3,7 @@ compiler: gcc
 sudo: required
   
 before_install:
-- sudo add-apt-repository ppa:mc3man/mpv-tests
+- sudo add-apt-repository ppa:mc3man/mpv-tests -y
 - sudo apt-get -qq update
 - sudo apt-get install mpv
 - sudo apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
