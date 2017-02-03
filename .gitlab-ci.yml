@@ -1,0 +1,33 @@
+# This file is a template, and might need editing before it works on your project.
+# use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: gcc
+
+build:
+  stage: build
+  # instead of calling g++ directly you can also use some build toolkit like make
+  # install the necessary build tools when needed
+  
+  before_script: 
+    - sed -i -e 's/ \(stable\|jessie\)/ testing/ig' /etc/apt/sources.list
+    - apt-get -qq update
+#    - apt-get --download-only -qq dist-upgrade
+#    - apt-get -qq dist-upgrade
+    - apt-get -qq install -y gdebi
+    - wget "http://www.deb-multimedia.org/pool/main/m/mpv-dmo/mpv_0.23.0-dmo2_amd64.deb" -qO mpv.deb
+    - gdebi mpv.deb
+    - rm mpv.deb
+    - apt-get -qq install -y qt5-default make pkg-config qtdeclarative5-dev
+  
+  script: 
+    - mkdir build
+    - cd build
+    - qmake ../src/syncmpv.pro
+    - make
+
+# run tests using the binary built before
+#test:
+#  stage: test
+#  script:
+#    - ./runmytests.sh
