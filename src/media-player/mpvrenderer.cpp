@@ -1,7 +1,7 @@
 #include "mpvrenderer.hpp"
 
 #include <media-player/mpvobject.hpp>
-
+#include <stdexcept>
 //Qt
 #include <QObject>
 #include <QtGlobal>

@@ -4,6 +4,8 @@
 MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
 {
     this->mpv = mpv;
+    this->shutdown = false;
+
     // Setup callbacks for qt property signals
     mpv_observe_property(mpv, 0, "time-pos", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "ao-volume", MPV_FORMAT_NONE);

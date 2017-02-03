@@ -26,7 +26,7 @@ class MpvEventEmitter : public QThread
 
 private:
     mpv::qt::Handle mpv;
-    bool shutdown = false;
+    bool shutdown;
 
     /*====================================================================*/
     /* FUNCTIONS                                                                                                   */

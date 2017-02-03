@@ -1,5 +1,7 @@
 #include "mpvobject.hpp"
 
+#include <stdexcept>
+
 //Qt Core
 #include <QObject>
 #include <QtGlobal>
