@@ -1,0 +1,5 @@
+/*!
+  \namespace mplayer
+  \inmodule SyncMPV
+  \brief Contains the media player using mpv.
+*/

@@ -14,6 +14,8 @@
 #include <qthelper.hpp>
 
 
+namespace mplayer {
+
 class MpvObject;
 
 class MpvEventEmitter : public QThread
@@ -44,4 +46,5 @@ signals:
     void volumeChanged();
 };
 
+} // namespace mplayer
 #endif // MPVEVENTEMITTER_HPP

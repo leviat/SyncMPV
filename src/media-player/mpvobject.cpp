@@ -15,25 +15,24 @@
 #include <QtQuick/QQuickWindow>
 #include <QtQuick/QQuickView>
 
-/*!
-  * \class MpvObject
-  *
-  * \brief The MpvObject acts as the controller for the GUI interface
-  *
-  * The MpvObject provides basic methods to pass commands to the underlying mpv thread.
-  * Mpv's properties can also be obtained from this class.
-  *
-  */
+namespace mplayer {
 
 /*!
- * \brief MpvObject::MpvObject constructs the underlying mpv player.
- * \param parent
- *
- * The constructor sets some default properties for the mpv player.
- * It also sets the callback for the rendering methods for the Framebuffer.
- * Furthermore we deploy another thread which handles the mpv's events for us.
- *
- */
+    \class mplayer::MpvObject
+    \inmodule mplayer
+    \brief The MpvObject acts as the controller for the GUI interface
+
+    The MpvObject provides basic methods to pass commands to the underlying mpv thread.
+    Mpv's properties can also be obtained from this class.
+*/
+
+/*!
+    \brief Constructs the underlying mpv player.
+
+    The constructor sets some default properties for the mpv player.
+    It also sets the callback for the rendering methods for the framebuffer \a parent.
+    Furthermore we deploy an MpvEventEmitter thread which handles the mpv's events for us.
+*/
 MpvObject::MpvObject(QQuickItem * parent)
     : QQuickFramebufferObject(parent), mpv_gl(0)
 {
@@ -68,7 +67,7 @@ MpvObject::MpvObject(QQuickItem * parent)
 }
 
 /*!
- * \brief MpvObject::~MpvObject Basic destructor
+    \brief Basic destructor
  */
 MpvObject::~MpvObject()
 {
@@ -79,8 +78,7 @@ MpvObject::~MpvObject()
 }
 
 /*!
- * \brief MpvObject::createRenderer
- * \return A QQuickFramebufferObject into which the video frames are rendered.
+    \brief Returns a QQuickFramebufferObject into which the video frames are rendered.
  */
 QQuickFramebufferObject::Renderer *MpvObject::createRenderer() const
 {
@@ -90,8 +88,7 @@ QQuickFramebufferObject::Renderer *MpvObject::createRenderer() const
 }
 
 /*!
- * \brief MpvObject::on_update just emits the onUpdate signal for the given mpv \a ctx.
- * \param ctx A pointer to the MpvObject.
+    \brief This emits the onUpdate signal for the given mpv \a ctx.
  */
 void MpvObject::on_update(void *ctx)
 {
@@ -100,38 +97,34 @@ void MpvObject::on_update(void *ctx)
 }
 
 /*!
- * \brief MpvObject::doUpdate updates the MpvObject
- *
- * Connected to onUpdate(); signal makes sure it runs on the GUI thread
- */
+    \brief Updates the MpvObject
+
+    Connected to onUpdate(); signal makes sure it runs on the GUI thread
+*/
 void MpvObject::doUpdate()
 {
     update();
 }
 
 /*!
- * \brief MpvObject::command passes the commands in \a params to the mpv-player.
- * \param params The command as parameters. (see mpv manual for valid parameters)
- */
+    \brief MpvObject::command passes the commands as \a params to the mpv-player.
+*/
 void MpvObject::command(const QVariant& params)
 {
     mpv::qt::command_variant(mpv, params);
 }
 
 /*!
- * \brief isError
- * \param property_result from trying to get a property value.
- * \return True if the property could not be retrieved.
- */
+    \brief isError returns true if the \a property_result is an error.
+*/
 bool isError(QVariant property_result) {
     return QString(property_result.typeName()).compare("mpv::qt::ErrorReturn") == 0;
 }
 
 /*!
- * \brief MpvObject::getPercentPlaytime
- * \return The playtime in percent (0-100%)
- * If no media is available, this returns 0.0
- */
+    \brief The playtime in percent
+    Returns the playtime in percent (0-100%). If no media is available, this returns 0.
+*/
 double MpvObject::percentPlaytime() {
 
     QVariant percent_pos = mpv::qt::get_property(mpv, "percent-pos");
@@ -144,10 +137,10 @@ double MpvObject::percentPlaytime() {
 }
 
 /*!
- * \brief MpvObject::playtime
- * \return The playtime as a QString formatted as [hh:mm:ss]
- * If there is no media available, this returns the string "hh:mm:ss".
- */
+    \brief The playtime as [hh:mm:ss]
+    Returns the playtime as a QString formatted as [hh:mm:ss]
+    If there is no media available, this returns the string "hh:mm:ss".
+*/
 QString MpvObject::playtime() {
     QVariant time_pos = mpv::qt::get_property(mpv, "time-pos");
 
@@ -167,10 +160,9 @@ QString MpvObject::playtime() {
 }
 
 /*!
- * \brief MpvObject::volume
- * \return The volume in percent (0-100%).
- * If no audio media is available, this returns 100.00
- */
+    \brief The volume in percent (0-100%).
+    If no audio media is available, this returns 100.00
+*/
 double MpvObject::volume() {
     QVariant volume = mpv::qt::get_property(mpv, "ao-volume");
 
@@ -182,11 +174,31 @@ double MpvObject::volume() {
 }
 
 /*!
- * \brief MpvObject::setProperty
- * \param name of the Property
- * \param value of the Property
- */
-void MpvObject::setProperty(const QString& name, const QVariant& value)
+    \brief Sets the  mpv \a property to the \a value.
+*/
+void MpvObject::setProperty(const QString& property, const QVariant& value)
 {
-    mpv::qt::set_property_variant(mpv, name, value);
+    mpv::qt::set_property_variant(mpv, property, value);
 }
+
+} //namespace mplayer
+
+/*!
+  \fn void MpvObject::onUpdate()
+  \brief Is emitted when a new frame has been rendered.
+*/
+
+/*!
+    \property MpvObject::playtime
+    \brief The current playtime
+*/
+
+/*!
+    \property MpvObject::percentPlaytime
+    \brief The current playtime in percent
+*/
+
+/*!
+    \property MpvObject::volume
+    \brief The current volume
+*/

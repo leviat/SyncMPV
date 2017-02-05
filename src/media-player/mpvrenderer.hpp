@@ -16,18 +16,9 @@
 #include <opengl_cb.h>
 #include <qthelper.hpp>
 
-
-
-
-/*====================================================================*/
-/* FORWARD DECLARATIONS  (GLOBAL NAMESPACE)                                      */
-/*====================================================================*/
+namespace mplayer {
 
 class MpvObject;
-
-/*====================================================================*/
-/* CLASS DEFINITIONS                                                                                      */
-/*====================================================================*/
 
 class MpvRenderer : public QQuickFramebufferObject::Renderer
 {
@@ -54,4 +45,5 @@ class MpvRenderer : public QQuickFramebufferObject::Renderer
 
 };
 
+} // namespace mplayer
 #endif // MPVRENDERER_HPP

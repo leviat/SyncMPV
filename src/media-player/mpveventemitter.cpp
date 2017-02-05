@@ -1,11 +1,22 @@
 #include "mpveventemitter.hpp"
 #include <media-player/mpvobject.hpp>
 
+namespace mplayer{
+
 /*!
- * \brief MpvEventEmitter::MpvEventEmitter constructs a QThread which will forward the mpv events to the signal-slot system.
- * \param mpv The actual mpv-player as handle
- * \param mpvObject The controller class for the GUI
- */
+    \class mplayer::MpvEventEmitter
+    \inmodule mplayer
+
+    \brief Polls specific events from the mpv event queue and feeds them into the signal-slot system of Qt.
+*/
+
+/*!
+    \fn MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
+    \brief Constructs a QThread which will forward the mpv events to the signal-slot system.
+
+    We have to provide it a handle to the underlying \a mpv thread so it can poll the events.
+    It also needs the \a mpvObject to which it will forward the appropriate signals.
+*/
 MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
 {
     this->mpv = mpv;
@@ -25,9 +36,9 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
 }
 
 /*!
- * \brief MpvEventEmitter::run polls mpv events and forwards them to the signal-slot system.
- * Can be terminated with initiateShutdown()
- */
+    \brief Polls mpv events and forwards them to the signal-slot system.
+    Can be terminated with initiateShutdown().
+*/
 void MpvEventEmitter::run(){
     while (!shutdown) {
         mpv_event *event = mpv_wait_event(mpv, 0.5);
@@ -44,8 +55,22 @@ void MpvEventEmitter::run(){
 }
 
 /*!
- * \brief MpvEventEmitter::initiateShutdown terminates the thread as soon as it finishes processing the current event
- */
+    \brief Sets the thread into shutdown mode. It will terminate as soon as it finishes processing the current event.
+*/
 void MpvEventEmitter::initiateShutdown() {
     shutdown = true;
 }
+
+} //namespace mplayer
+
+// Misc. documentation
+
+/*!
+    \fn void MpvEventEmitter::playtimeChanged()
+    \brief Is emitted when the playtime has changed.
+*/
+
+/*!
+    \fn void MpvEventEmitter::volumeChanged()
+    \brief Is emitted when the volume has changed.
+*/

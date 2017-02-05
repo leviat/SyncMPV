@@ -16,6 +16,7 @@
 #include <opengl_cb.h>
 #include <qthelper.hpp>
 
+namespace mplayer {
 
 /*====================================================================*/
 /* CLASS DEFINITIONS                                                                                      */
@@ -68,6 +69,7 @@ private slots:
 
 };
 
+} // namespace mplayer
 #endif // MPVOBJECT_HPP
 
 

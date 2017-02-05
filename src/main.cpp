@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     // requires the LC_NUMERIC category to be set to "C", so change it back.
     std::setlocale(LC_NUMERIC, "C");
 
-    qmlRegisterType<MpvObject>("syncmpv", 1, 0, "MpvObject");
+    qmlRegisterType<mplayer::MpvObject>("syncmpv", 1, 0, "MpvObject");
 
     QQmlApplicationEngine engine("view/main.qml");
     

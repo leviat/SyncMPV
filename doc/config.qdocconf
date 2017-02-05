@@ -1,0 +1,13 @@
+include(./qdoc-configs/qt-html-templates-online.qdocconf)
+
+project = SyncMPV
+description = A media player to watch films together across computers
+
+sourcedirs += ../src
+headerdirs += ../src
+
+sources.fileextensions = "*.cpp *.qdoc *.mm *.qml"
+headers.fileextensions = "*.h *.ch *.h++ *.hh *.hpp *.hxx"
+
+outputformats = HTML
+outputdir = ./html/
