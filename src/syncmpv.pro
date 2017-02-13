@@ -1,7 +1,7 @@
 QT += qml quick
 
-CONFIG += static
 CONFIG += console
+CONFIG += c++11
 
 RESOURCES += syncmpv.qrc
 
