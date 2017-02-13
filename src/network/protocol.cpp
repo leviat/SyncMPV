@@ -35,7 +35,7 @@ QDataStream & operator>> (QDataStream& stream, initPacket& packet) {
 
 void Protocol::initiationPacket(QByteArray &buffer, QString name) {
     QDataStream out(&buffer, QIODevice::Truncate);
-    out.setVersion(QDataStream::Qt_5_7);
+    out.setVersion(QDataStream::Qt_5_2);
 
     initPacket packet = {INIT, name};
     out << packet;
@@ -43,9 +43,9 @@ void Protocol::initiationPacket(QByteArray &buffer, QString name) {
 
 QString Protocol::toName(QByteArray &initiationPacket) {
     QDataStream in(&initiationPacket, QIODevice::ReadOnly);
-    in.setVersion(QDataStream::Qt_5_7);
+    in.setVersion(QDataStream::Qt_5_2);
 
-    initPacket packet = {};
+    initPacket packet = {INIT, ""};
     in >> packet;
     return packet.name;
 }
