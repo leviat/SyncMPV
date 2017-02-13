@@ -1,10 +1,6 @@
 #ifndef MPVEVENTEMITTER_HPP
 #define MPVEVENTEMITTER_HPP
 
-/*====================================================================*/
-/* INCLUDES                                                                                                      */
-/*====================================================================*/
-
 //Qt
 #include <qthread.h>
 
@@ -28,7 +24,7 @@ class MpvEventEmitter : public QThread
 
 private:
     mpv::qt::Handle mpv;
-    bool shutdown;
+    bool shouldTerminate;
 
     /*====================================================================*/
     /* FUNCTIONS                                                                                                   */
@@ -44,6 +40,7 @@ private:
 signals:
     void playtimeChanged();
     void volumeChanged();
+    void stateChanged();
 };
 
 } // namespace mplayer

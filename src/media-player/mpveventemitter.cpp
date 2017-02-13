@@ -20,11 +20,12 @@ namespace mplayer{
 MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
 {
     this->mpv = mpv;
-    this->shutdown = false;
+    this->shouldTerminate = false;
 
     // Setup callbacks for qt property signals
     mpv_observe_property(mpv, 0, "time-pos", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "ao-volume", MPV_FORMAT_NONE);
+    mpv_observe_property(mpv, 0, "core-idle", MPV_FORMAT_NONE);
 
     // when the audio is initially played, mpv doesn't emit an event for the change of ao-volume
     // we also listen to a change of the codec instead to catch the first time audio is played
@@ -33,6 +34,9 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     connect(this, &MpvEventEmitter::playtimeChanged, mpvObject, &MpvObject::playtimeChanged, Qt::QueuedConnection);
     connect(this, &MpvEventEmitter::volumeChanged, mpvObject, &MpvObject::volumeChanged, Qt::QueuedConnection);
 
+    connect(this, &MpvEventEmitter::stateChanged, mpvObject, &MpvObject::updateState, Qt::QueuedConnection);
+
+
 }
 
 /*!
@@ -40,9 +44,10 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     Can be terminated with initiateShutdown().
 */
 void MpvEventEmitter::run(){
-    while (!shutdown) {
+    while (!shouldTerminate) {
         mpv_event *event = mpv_wait_event(mpv, 0.5);
 
+        // Qt UI relevant changes
         if (event->event_id == MPV_EVENT_PROPERTY_CHANGE) {
             QString eventName =  QString(reinterpret_cast<mpv_event_property*>(event->data)->name);
 
@@ -51,6 +56,14 @@ void MpvEventEmitter::run(){
             else if (eventName == "ao-volume" || eventName == "audio-codec")
                 emit volumeChanged();
         }
+
+        // Sync relevant changes
+        if (event->event_id == MPV_EVENT_PROPERTY_CHANGE) {
+            QString eventName =  QString(reinterpret_cast<mpv_event_property*>(event->data)->name);
+
+            if (eventName == "time-pos" || eventName == "core-idle")
+                emit stateChanged();
+        }
     }
 }
 
@@ -58,7 +71,7 @@ void MpvEventEmitter::run(){
     \brief Sets the thread into shutdown mode. It will terminate as soon as it finishes processing the current event.
 */
 void MpvEventEmitter::initiateShutdown() {
-    shutdown = true;
+    shouldTerminate = true;
 }
 
 } //namespace mplayer

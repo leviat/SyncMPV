@@ -15,6 +15,26 @@
 #include <QtQuick/QQuickWindow>
 #include <QtQuick/QQuickView>
 
+/*!
+  \fn void MpvObject::onUpdate()
+  \brief Is emitted when a new frame has been rendered.
+*/
+
+/*!
+    \property MpvObject::playtime
+    \brief The current playtime
+*/
+
+/*!
+    \property MpvObject::percentPlaytime
+    \brief The current playtime in percent
+*/
+
+/*!
+    \property MpvObject::volume
+    \brief The current volume
+*/
+
 namespace mplayer {
 
 /*!
@@ -181,24 +201,48 @@ void MpvObject::setProperty(const QString& property, const QVariant& value)
     mpv::qt::set_property_variant(mpv, property, value);
 }
 
+/*!
+    \brief Retrieves the media player's state from the mpv thread and stores it in an internal data structure.
+*/
+void MpvObject::updateState() {
+    stateMutex.lock();
+
+    QVariant coreIdleProperty = mpv::qt::get_property(mpv, "core-idle");
+    QVariant pauseProperty = mpv::qt::get_property(mpv, "pause");
+    QVariant pausedForCacheProperty = mpv::qt::get_property(mpv, "paused-for-cache");
+
+    if (isError(coreIdleProperty) || isError(pauseProperty) || isError(pausedForCacheProperty))
+        m_state.playState = PAUSE;
+    else if (coreIdleProperty.toBool() == false)
+        m_state.playState = PLAY;
+    else if (pauseProperty.toBool() == true)
+        m_state.playState = PAUSE;
+    else if (pausedForCacheProperty.toBool() == true)
+        m_state.playState = BUFFERING;
+    else
+        m_state.playState = PAUSE;
+
+    QVariant timeProperty = mpv::qt::get_property(mpv, "time-pos");
+
+    if (isError(timeProperty))
+        m_state.playTime = 0;
+    else
+        m_state.playTime = timeProperty.toInt();
+
+    stateMutex.unlock();
+}
+
+/*!
+ * \brief Returns the media player's state.
+ */
+
+mplayer::state MpvObject::state() {
+    stateMutex.lock();
+    mplayer::state state = this->m_state;
+    stateMutex.unlock();
+
+    return state;
+}
+
 } //namespace mplayer
 
-/*!
-  \fn void MpvObject::onUpdate()
-  \brief Is emitted when a new frame has been rendered.
-*/
-
-/*!
-    \property MpvObject::playtime
-    \brief The current playtime
-*/
-
-/*!
-    \property MpvObject::percentPlaytime
-    \brief The current playtime in percent
-*/
-
-/*!
-    \property MpvObject::volume
-    \brief The current volume
-*/

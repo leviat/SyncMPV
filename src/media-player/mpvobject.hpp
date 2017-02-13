@@ -1,15 +1,12 @@
 #ifndef MPVOBJECT_HPP
 #define MPVOBJECT_HPP
 
-/*====================================================================*/
-/* INCLUDES                                                                                                      */
-/*====================================================================*/
-
 #include <media-player/mpvrenderer.hpp>
 #include <media-player/mpveventemitter.hpp>
 
 //Qt
 #include <QtQuick/QQuickFramebufferObject>
+#include <QMutex>
 
 //libmpv
 #include <client.h>
@@ -17,6 +14,17 @@
 #include <qthelper.hpp>
 
 namespace mplayer {
+
+enum playState {
+    PLAY,
+    PAUSE,
+    BUFFERING
+};
+
+struct state {
+        mplayer::playState playState;
+        int playTime;
+};
 
 /*====================================================================*/
 /* CLASS DEFINITIONS                                                                                      */
@@ -39,6 +47,8 @@ private:
     mpv::qt::Handle mpv;
     mpv_opengl_cb_context *mpv_gl;
     MpvEventEmitter* eventEmitter;
+    QMutex stateMutex;
+    mplayer::state m_state;
 
     /*====================================================================*/
     /* FUNCTIONS                                                                                                   */
@@ -51,6 +61,7 @@ public:
     QString playtime();
     double volume();
     double percentPlaytime();
+    mplayer::state state();
 
 private:
     static void on_update(void *ctx);
@@ -63,6 +74,7 @@ signals:
 public slots:
     void command(const QVariant& params);
     void setProperty(const QString& name, const QVariant& value);
+    void updateState();
 
 private slots:
     void doUpdate();

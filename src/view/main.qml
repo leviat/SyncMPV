@@ -12,6 +12,14 @@ ApplicationWindow {
     height: 720
     visible: true
 
+    Client {
+        id: client
+    }
+
+    Host {
+        id: host
+    }
+
     MpvObject {
         id: mpv
         anchors.fill: parent
@@ -82,6 +90,20 @@ ApplicationWindow {
                     }
                 }
 
+            }
+
+            Button {
+                id: host_button
+                x: 16
+                y: 131
+                text: qsTr("Host")
+            }
+
+            Button {
+                id: client_button
+                x: 110
+                y: 131
+                text: qsTr("Client")
             }
         }
     }
@@ -240,6 +262,30 @@ ApplicationWindow {
         }
     }
 
+    Connections {
+        target: host_button
+        onClicked: {
+            host_button.enabled = false
+            host.openConnection()
+        }
 
+    }
+
+    Connections {
+        target: client_button
+        onClicked: {
+            client_button.enabled = false
+            client.connect()
+        }
+
+    }
+
+    Connections {
+        target: window
+        onClosing: {
+            host.closeConnection()
+            client.disconnect()
+        }
+    }
 
 }
