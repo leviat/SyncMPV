@@ -29,7 +29,7 @@ class Host : public QObject
 private:
     QTcpServer server;
     Host::state status;
-    QVector<QTcpSocket*> clients;
+    QList<QTcpSocket*> clients;
 
     /*====================================================================*/
     /* FUNCTIONS                                                                                                   */
