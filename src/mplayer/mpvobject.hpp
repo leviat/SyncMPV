@@ -1,8 +1,8 @@
 #ifndef MPVOBJECT_HPP
 #define MPVOBJECT_HPP
 
-#include <media-player/mpvrenderer.hpp>
-#include <media-player/mpveventemitter.hpp>
+#include <mplayer/mpvrenderer.hpp>
+#include <mplayer/mpveventemitter.hpp>
 
 //Qt
 #include <QtQuick/QQuickFramebufferObject>
@@ -23,7 +23,7 @@ enum playState {
 
 struct state {
         mplayer::playState playState;
-        int playTime;
+        double playTime;
 };
 
 /*====================================================================*/
@@ -70,6 +70,7 @@ signals:
     void onUpdate();
     void playtimeChanged();
     void volumeChanged();
+    void stateChanged();
 
 public slots:
     void command(const QVariant& params);

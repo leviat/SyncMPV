@@ -34,8 +34,17 @@ void Client::sendName() {
         return;
 
     QByteArray buffer = QByteArray();
-    Protocol::initiationPacket(buffer, "client_moop");
+    Protocol::toInitPacket(buffer, "client_moop");
     socket.write(buffer);
+    socket.setSocketOption(QTcpSocket::LowDelayOption, 1);
+    QObject::connect(&socket, &QTcpSocket::readyRead, this, &Client::processSyncPacket);
+
+}
+
+void Client::processSyncPacket() {
+    QObject* obj = sender();
+    QByteArray packet = reinterpret_cast<QTcpSocket*>(obj)->readAll();
+    qDebug() << "Host play time: " << Protocol::toPlayerState(packet).playTime;
 }
 
 void Client::disconnect() {
@@ -44,5 +53,6 @@ void Client::disconnect() {
 
     socket.close();
 }
+
 
 } // namespace network

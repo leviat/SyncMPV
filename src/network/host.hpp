@@ -1,6 +1,8 @@
 #ifndef HOST_HPP
 #define HOST_HPP
 
+#include <mplayer/mpvobject.hpp>
+
 // Qt
 #include <QTcpServer>
 
@@ -27,6 +29,7 @@ class Host : public QObject
 private:
     QTcpServer server;
     Host::state status;
+    QVector<QTcpSocket*> clients;
 
     /*====================================================================*/
     /* FUNCTIONS                                                                                                   */
@@ -34,6 +37,7 @@ private:
 
 public:
     Host();
+    ~Host();
 
 private:
     void run();
@@ -45,6 +49,7 @@ signals:
 public slots:
     void openConnection();
     void closeConnection();
+    void broadcastPlayerState();
 
 private slots:
     void addClient();

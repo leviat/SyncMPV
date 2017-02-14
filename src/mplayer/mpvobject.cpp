@@ -56,6 +56,8 @@ namespace mplayer {
 MpvObject::MpvObject(QQuickItem * parent)
     : QQuickFramebufferObject(parent), mpv_gl(0)
 {
+    m_state = {PAUSE, 0};
+
     mpv = mpv::qt::Handle::FromRawHandle(mpv_create());
     if (!mpv)
         throw std::runtime_error("could not create mpv context");
@@ -84,6 +86,7 @@ MpvObject::MpvObject(QQuickItem * parent)
 
     eventEmitter = new MpvEventEmitter(mpv, this);
     eventEmitter->start();
+
 }
 
 /*!
@@ -227,9 +230,12 @@ void MpvObject::updateState() {
     if (isError(timeProperty))
         m_state.playTime = 0;
     else
-        m_state.playTime = timeProperty.toInt();
+        m_state.playTime = timeProperty.toDouble();
 
     stateMutex.unlock();
+
+    emit stateChanged();
+
 }
 
 /*!
@@ -238,7 +244,7 @@ void MpvObject::updateState() {
 
 mplayer::state MpvObject::state() {
     stateMutex.lock();
-    mplayer::state state = this->m_state;
+    mplayer::state state = m_state;
     stateMutex.unlock();
 
     return state;

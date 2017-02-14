@@ -36,6 +36,7 @@ public slots:
 
 private slots:
     void sendName();
+    void processSyncPacket();
 
 };
 

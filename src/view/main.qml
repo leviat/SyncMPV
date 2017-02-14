@@ -14,14 +14,17 @@ ApplicationWindow {
 
     Client {
         id: client
+        objectName: "client"
     }
 
     Host {
         id: host
+        objectName: "host"
     }
 
     MpvObject {
         id: mpv
+        objectName: "mpv"
         anchors.fill: parent
         scale: 1
 
@@ -164,7 +167,6 @@ ApplicationWindow {
                     fontSizeMode: Text.VerticalFit
                     font.pixelSize: 12
                     Layout.preferredWidth: 60
-
                 }
 
 
@@ -265,6 +267,7 @@ ApplicationWindow {
     Connections {
         target: host_button
         onClicked: {
+            client_button.enabled = false
             host_button.enabled = false
             host.openConnection()
         }
@@ -274,6 +277,7 @@ ApplicationWindow {
     Connections {
         target: client_button
         onClicked: {
+            host_button.enabled = false
             client_button.enabled = false
             client.connect()
         }

@@ -1,5 +1,5 @@
-#include <media-player/mpvobject.hpp>
-#include <media-player/mpvrenderer.hpp>
+#include <mplayer/mpvobject.hpp>
+#include <mplayer/mpvrenderer.hpp>
 
 #include <stdexcept>
 #include <clocale>
@@ -13,6 +13,7 @@
 #include <QOpenGLContext>
 #include <QGuiApplication>
 #include <QMetaObject>
+#include <QQmlContext>
 
 #include <QtGui/QOpenGLFramebufferObject>
 
@@ -22,7 +23,6 @@
 
 int main(int argc, char **argv)
 {
-
     QGuiApplication app(argc, argv);
 
     // Qt sets the locale in the QGuiApplication constructor, but libmpv
@@ -34,6 +34,12 @@ int main(int argc, char **argv)
     qmlRegisterType<network::Client>("syncmpv", 1, 0, "Client");
 
     QQmlApplicationEngine engine("view/main.qml");
+
+    mplayer::MpvObject* mpv = engine.rootObjects().first()->findChild<mplayer::MpvObject*>("mpv");
+    network::Host* host = engine.rootObjects().first()->findChild<network::Host*>("host");
+    //network::Client* client = engine.rootObjects().first()->findChild<network::Client*>("client");
+
+    QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &network::Host::broadcastPlayerState);
 
     return app.exec();
 

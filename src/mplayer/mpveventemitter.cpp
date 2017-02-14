@@ -1,5 +1,5 @@
 #include "mpveventemitter.hpp"
-#include <media-player/mpvobject.hpp>
+#include <mplayer/mpvobject.hpp>
 
 namespace mplayer{
 

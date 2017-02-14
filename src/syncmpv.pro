@@ -6,18 +6,18 @@ CONFIG += c++11
 RESOURCES += syncmpv.qrc
 
 HEADERS += \
-    media-player/mpvobject.hpp \
-    media-player/mpvrenderer.hpp \
-    media-player/mpveventemitter.hpp \
+    mplayer/mpvobject.hpp \
+    mplayer/mpvrenderer.hpp \
+    mplayer/mpveventemitter.hpp \
     network/protocol.hpp \
     network/host.hpp \
     network/client.hpp
 
 SOURCES += \
-    media-player/mpvobject.cpp \
-    media-player/mpvrenderer.cpp \
+    mplayer/mpvobject.cpp \
+    mplayer/mpvrenderer.cpp \
     main.cpp \
-    media-player/mpveventemitter.cpp \
+    mplayer/mpveventemitter.cpp \
     network/protocol.cpp \
     network/host.cpp \
     network/client.cpp
@@ -27,7 +27,6 @@ DISTFILES += \
     ../.travis.yml \
     ../.gitignore \
     ../README.md
-
 
 win32: LIBS += -L$$PWD/../libmpv/ -lmpv
 
