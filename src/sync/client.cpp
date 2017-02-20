@@ -12,7 +12,9 @@ Client::Client(QObject *parent) : QObject(parent)
 
 void Client::connect(){
     QObject::connect(&socket, &network::ClientSocket::connected, this, &Client::sendName);
-    socket.connect(QHostAddress("127.0.0.1"));
+
+    QHostAddress host = QHostAddress("127.0.0.1");
+    socket.connect(host);
 }
 
 void Client::disconnect() {
