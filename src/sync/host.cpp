@@ -32,17 +32,31 @@ void Host::broadcastPlayerState() {
     socket.broadcast(packet);
 }
 
-void Host::processPackage(QByteArray &packet) {
-    //TODO
+void Host::processPackage() {
+    QTcpSocket* client = reinterpret_cast<QTcpSocket*>(sender());
+    QByteArray packetBytes = client->readAll();
+    Protocol::Packet packet = Protocol::toPacket(packetBytes);
+
+    if (packet.phase == Protocol::INIT) {
+        QString name = Protocol::toName(packet.data);
+        for ( auto clientInfo : clients) {
+            if( clientInfo->address == client->peerAddress()) {
+                clientInfo->name = name;
+            }
+        }
+    }
+
+    if (packet.phase == Protocol::SYNC) {
+        //mplayer::state playerState = Protocol::toPlayerState(packet.data);
+    }
+
 }
 
 void Host::addClient(QTcpSocket* client) {
-    qDebug() << client->peerAddress();
-    //disconnect(client, &QTcpSocket::readyRead, this, &network::HostSocket::checkClientName);
-
-    //QByteArray packet = client->readAll();
-    //qDebug() << sync::Protocol::toName(packet);
-
+    std::shared_ptr<ClientInfo> clientInfo = std::make_shared<ClientInfo>(client->peerAddress(), client->peerPort(), "", 0, 0);
+    qDebug() << clientInfo->address;
+    QObject::connect(client, &QTcpSocket::readyRead, this, &Host::processPackage);
+    clients.append(clientInfo);
 }
 
 } // namespace Sync

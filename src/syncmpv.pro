@@ -13,7 +13,8 @@ HEADERS += \
     network/clientsocket.hpp \
     sync/protocol.hpp \
     sync/host.hpp \
-    sync/client.hpp
+    sync/client.hpp \
+    sync/clientinfo.hpp
 
 SOURCES += \
     mplayer/mpvobject.cpp \
@@ -24,7 +25,8 @@ SOURCES += \
     network/hostsocket.cpp \
     sync/protocol.cpp \
     sync/host.cpp \
-    sync/client.cpp
+    sync/client.cpp \
+    sync/clientinfo.cpp
 
 DISTFILES += \
     view/main.qml \

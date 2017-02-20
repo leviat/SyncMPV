@@ -1,8 +1,13 @@
 #ifndef HOST_HPP
 #define HOST_HPP
 
-#include <QObject>
 #include <network/hostsocket.hpp>
+#include <sync/clientinfo.hpp>
+
+#include <memory>
+
+// Qt
+#include <QObject>
 
 namespace sync {
 
@@ -12,13 +17,14 @@ class Host : public QObject
 
 private:
     network::HostSocket socket;
+    QList<std::shared_ptr<ClientInfo>> clients;
 
 public:
     Host(QObject *parent = 0);
 
 public slots:
     void broadcastPlayerState();
-    void processPackage(QByteArray& packet);
+    void processPackage();
     void addClient(QTcpSocket* client);
     void openConnection();
     void closeConnection();

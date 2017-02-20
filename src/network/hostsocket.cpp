@@ -65,7 +65,9 @@ void HostSocket::addClient() {
 
     connect(clientConnection, &QTcpSocket::disconnected, this, [=]() { clients.removeOne(reinterpret_cast<QTcpSocket*>(sender())); });
     connect(clientConnection, &QTcpSocket::disconnected, clientConnection, &QObject::deleteLater);
-    connect(clientConnection, &QTcpSocket::readyRead, this, [=]() { emit newClient(reinterpret_cast<QTcpSocket*>(sender())); });
+
+    emit newClient(clientConnection);
+    connect(clientConnection, &QTcpSocket::readyRead, this, [=]() { emit newData(clientConnection); });
 }
 
 /*!

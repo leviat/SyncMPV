@@ -13,7 +13,7 @@ Client::Client(QObject *parent) : QObject(parent)
 void Client::connect(){
     QObject::connect(&socket, &network::ClientSocket::connected, this, &Client::sendName);
 
-    QHostAddress host = QHostAddress("127.0.0.1");
+    QHostAddress host("127.0.0.1");
     socket.connect(host);
 }
 
@@ -24,7 +24,7 @@ void Client::disconnect() {
 void Client::sendName() {
     QObject::disconnect(&socket, &network::ClientSocket::connected, this, &Client::sendName);
 
-    QByteArray buffer = QByteArray();
+    QByteArray buffer;
     sync::Protocol::toInitPacket(buffer, "client_moop");
     socket.send(buffer);
 }

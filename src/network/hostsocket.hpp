@@ -41,6 +41,7 @@ private:
 signals:
     void serverError();
     void newClient(QTcpSocket* client);
+    void newData(QTcpSocket* client);
 
 public slots:
     void openConnection();

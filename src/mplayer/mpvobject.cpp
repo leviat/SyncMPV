@@ -96,6 +96,8 @@ MpvObject::~MpvObject()
 {
     eventEmitter->initiateShutdown();
     eventEmitter->wait(1000);
+    delete eventEmitter;
+
     if (mpv_gl)
         mpv_opengl_cb_set_update_callback(mpv_gl, NULL, NULL);
 }
