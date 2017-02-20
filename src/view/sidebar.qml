@@ -1,5 +1,5 @@
 import QtQuick 2.0
-
+import QtQuick.Controls.Styles 1.4
 import syncmpv 1.0
 
 import QtQuick.Layouts 1.3
@@ -99,18 +99,50 @@ Rectangle {
                         font.bold: true
                     }
 
-                    ProgressBar {
+                    ProgressBar { // play progress
                         Layout.preferredWidth: side_area.width - 20
                         Layout.preferredHeight: 22
-                        value: progress
+                        value: playProgress
                         maximumValue: 100
 
-                        ProgressBar {
+                        style: ProgressBarStyle {
+                            background: Rectangle {
+                                radius: 2
+                                color: "lightgray"
+                                border.color: "gray"
+                                border.width: 1
+                                implicitWidth: 200
+                                implicitHeight: 24
+                            }
+                            progress: Rectangle {
+                                color: "lightsteelblue"
+                                border.color: "steelblue"
+                            }
+                        }
+
+                        ProgressBar { // buffer progress
                             width: side_area.width - 20 - Math.ceil(parent.value / 100 * parent.width)
                             anchors.left: parent.left
                             anchors.leftMargin: Math.floor(parent.value / 100 * parent.width)
                             height: parent.height
-                            value: 0
+                            value: bufferProgress
+                            maximumValue: 100
+
+                            style: ProgressBarStyle {
+                                background: Rectangle {
+                                    radius: 2
+                                    color: "lightgray"
+                                    border.color: "gray"
+                                    border.width: 1
+                                    implicitWidth: 200
+                                    implicitHeight: 24
+                                }
+                                progress: Rectangle {
+                                    color: "orange"
+                                    border.color: "brown"
+                                }
+                            }
+
                         }
 
                         Text {
@@ -128,22 +160,26 @@ Rectangle {
             model: ListModel {
                 ListElement {
                     name: "localhost"
-                    progress: 10
+                    playProgress: 10
+                    bufferProgress: 5
                 }
 
                 ListElement {
                     name: "Red"
-                    progress: 20
+                    playProgress: 20
+                    bufferProgress: 100
                 }
 
                 ListElement {
                     name: "Blue"
-                    progress: 50
+                    playProgress: 50
+                    bufferProgress: 5
                 }
 
                 ListElement {
                     name: "Green"
-                    progress: 100
+                    playProgress: 100
+                    bufferProgress: 0
                 }
             }
 
