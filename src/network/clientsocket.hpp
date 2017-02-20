@@ -23,6 +23,8 @@ private:
 
 public:
     ClientSocket();
+    ~ClientSocket();
+    QByteArray readAll();
 
 signals:
     void connected();

@@ -8,16 +8,41 @@
 
 namespace network {
 
+/*!
+    \class network::HostSocket
+    \inmodule network
+    \brief The HostSocket provides a server for clients to connect to.
+*/
+
+/*!
+  \fn void HostSocket::serverError()
+  \brief Is emitted when the server could not be properly opened.
+*/
+
+/*!
+  \fn void HostSocket::newClient(QTcpSocket* client);
+  \brief Is emitted when a new \a client connects to the HostSocket.
+*/
+
+/*!
+ * \brief Constructs a closed HostSocket.
+ */
 HostSocket::HostSocket()
 {
     status = NONE;
     connect(&server, &QTcpServer::newConnection, this, &HostSocket::addClient);
 }
 
+/*!
+ * \brief Destroys the socket.
+ */
 HostSocket::~HostSocket() {
     closeConnection();
 }
 
+/*!
+ * \brief Opens the connection on Port 8000.
+ */
 void HostSocket::openConnection() {
     if (status != CONNECTION_OPEN) {
         if (!server.listen(QHostAddress::Any, 8000)) {
@@ -30,6 +55,9 @@ void HostSocket::openConnection() {
     }
 }
 
+/*!
+ * \brief Accepts the next pending client and adds it to the broadcast list.
+ */
 void HostSocket::addClient() {
     QTcpSocket *clientConnection = server.nextPendingConnection();
     clientConnection->setSocketOption(QTcpSocket::LowDelayOption, 1);
@@ -40,6 +68,9 @@ void HostSocket::addClient() {
     connect(clientConnection, &QTcpSocket::readyRead, this, [=]() { emit newClient(reinterpret_cast<QTcpSocket*>(sender())); });
 }
 
+/*!
+ * \brief Broadcasts the \a packet to all clients.
+ */
 void HostSocket::broadcast(QByteArray& packet) {
     for (QTcpSocket* client : clients) {
         if (client->state() == QTcpSocket::ConnectedState)
@@ -47,8 +78,9 @@ void HostSocket::broadcast(QByteArray& packet) {
     }
 }
 
-
-
+/*!
+ * \brief Closes the connection.
+ */
 void HostSocket::closeConnection() {
     if (status == CONNECTION_OPEN) {
         server.close();

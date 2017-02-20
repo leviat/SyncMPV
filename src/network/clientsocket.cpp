@@ -10,6 +10,26 @@
 
 namespace network {
 
+/*!
+    \class network::ClientSocket
+    \inmodule network
+    \brief The ClientSocket establishes a connection to a peer (i.e. the host) to send and receive data.
+*/
+
+/*!
+  \fn void ClientSocket::connected()
+  \brief Is emitted when the socket successfully connects to the peer.
+*/
+
+/*!
+  \fn void ClientSocket::newData()
+  \brief Is emitted when the socket received new data from the peer.
+*/
+
+/*!
+ * \brief Constructs an unconnected ClientSocket.
+ */
+
 ClientSocket::ClientSocket()
 {
     QObject::connect(&socket, static_cast<void(QTcpSocket::*)(QTcpSocket::SocketError)>(&QTcpSocket::error),
@@ -21,6 +41,16 @@ ClientSocket::ClientSocket()
 
 }
 
+/*!
+ * \brief Destroys the socket.
+ */
+ClientSocket::~ClientSocket() {
+    disconnect();
+}
+
+/*!
+ * \brief Connects the socket to the \a address.
+ */
 void ClientSocket::connect(QHostAddress& address) {
     if (socket.state() != QTcpSocket::UnconnectedState)
         return;
@@ -31,6 +61,9 @@ void ClientSocket::connect(QHostAddress& address) {
 
 }
 
+/*!
+ * \brief Sends the \a packet to the peer.
+ */
 void ClientSocket::send(QByteArray& packet) {
     if (socket.state() != QTcpSocket::ConnectedState) {
         qDebug() << "Client tries to send data but is not connected.";
@@ -40,6 +73,16 @@ void ClientSocket::send(QByteArray& packet) {
     socket.write(packet);
 }
 
+/*!
+ * \brief Returns the available data
+ */
+QByteArray ClientSocket::readAll() {
+    return socket.readAll();
+}
+
+/*!
+ * \brief Disconnects the socket.
+ */
 void ClientSocket::disconnect() {
     if (socket.state() != QTcpSocket::ConnectedState)
         return;

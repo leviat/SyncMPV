@@ -15,6 +15,17 @@
 #include <QtQuick/QQuickWindow>
 #include <QtQuick/QQuickView>
 
+namespace mplayer {
+
+/*!
+    \class mplayer::MpvObject
+    \inmodule mplayer
+    \brief The MpvObject acts as the controller for the GUI interface
+
+    The MpvObject provides basic methods to pass commands to the underlying mpv thread.
+    Mpv's properties can also be obtained from this class.
+*/
+
 /*!
   \fn void MpvObject::onUpdate()
   \brief Is emitted when a new frame has been rendered.
@@ -33,17 +44,6 @@
 /*!
     \property MpvObject::volume
     \brief The current volume
-*/
-
-namespace mplayer {
-
-/*!
-    \class mplayer::MpvObject
-    \inmodule mplayer
-    \brief The MpvObject acts as the controller for the GUI interface
-
-    The MpvObject provides basic methods to pass commands to the underlying mpv thread.
-    Mpv's properties can also be obtained from this class.
 */
 
 /*!

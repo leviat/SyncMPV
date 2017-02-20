@@ -39,7 +39,6 @@ private:
     void run();
 
 signals:
-    void serverListening();
     void serverError();
     void newClient(QTcpSocket* client);
 
