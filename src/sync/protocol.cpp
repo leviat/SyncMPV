@@ -5,7 +5,7 @@
 #include <qdatastream.h>
 #include <qiodevice.h>
 
-namespace network {
+namespace sync {
 
 enum connectionPhase {
     INIT,
@@ -13,12 +13,12 @@ enum connectionPhase {
 };
 
 struct initPacket {
-    network::connectionPhase phase;
+    connectionPhase phase;
     QString name;
 };
 
 struct syncPacket {
-    network::connectionPhase phase;
+    connectionPhase phase;
     mplayer::state playerState;
 };
 
@@ -69,7 +69,7 @@ QString Protocol::toName(QByteArray &buffer) {
     QDataStream in(&buffer, QIODevice::ReadOnly);
     in.setVersion(QDataStream::Qt_5_2);
 
-    initPacket packet = {};
+    initPacket packet;
     in >> packet;
 
     if (packet.phase != INIT) {
@@ -92,7 +92,7 @@ mplayer::state Protocol::toPlayerState(QByteArray &buffer) {
     QDataStream in(&buffer, QIODevice::ReadOnly);
     in.setVersion(QDataStream::Qt_5_2);
 
-    syncPacket packet = {};
+    syncPacket packet;
     in >> packet;
 
     if (packet.phase != SYNC) {

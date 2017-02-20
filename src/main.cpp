@@ -4,8 +4,8 @@
 #include <stdexcept>
 #include <clocale>
 
-#include <network/host.hpp>
-#include <network/client.hpp>
+#include <sync/host.hpp>
+#include <sync/client.hpp>
 
 // Qt
 #include <QObject>
@@ -30,16 +30,16 @@ int main(int argc, char **argv)
     std::setlocale(LC_NUMERIC, "C");
 
     qmlRegisterType<mplayer::MpvObject>("syncmpv", 1, 0, "MpvObject");
-    qmlRegisterType<network::Host>("syncmpv", 1, 0, "Host");
-    qmlRegisterType<network::Client>("syncmpv", 1, 0, "Client");
+    qmlRegisterType<sync::Host>("syncmpv", 1, 0, "Host");
+    qmlRegisterType<sync::Client>("syncmpv", 1, 0, "Client");
 
     QQmlApplicationEngine engine("view/main.qml");
 
     mplayer::MpvObject* mpv = engine.rootObjects().first()->findChild<mplayer::MpvObject*>("mpv");
-    network::Host* host = engine.rootObjects().first()->findChild<network::Host*>("host");
+    network::HostSocket* host = engine.rootObjects().first()->findChild<network::HostSocket*>("host");
     //network::Client* client = engine.rootObjects().first()->findChild<network::Client*>("client");
 
-    QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &network::Host::broadcastPlayerState);
+    //TODO QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &network::HostSocket::broadcastPlayerState);
 
     return app.exec();
 

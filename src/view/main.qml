@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 
 import syncmpv 1.0
+
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.3 // ApplicationWindow
@@ -45,7 +46,7 @@ ApplicationWindow {
         running: true
     }
 
-    Rectangle {
+    Sidebar {
         id: side_menu
         x: 132
         width: 200
@@ -56,59 +57,8 @@ ApplicationWindow {
         anchors.topMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
-
-        MouseArea {
-            id: side_area
-            hoverEnabled: true
-            anchors.fill: parent
-
-            Button {
-                id: button
-                x: 62
-                y: 10
-                text: qsTr("Load")
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: parent.top
-                anchors.topMargin: 10
-
-                Rectangle {
-                    id: textframe
-                    x: -52
-                    y: 63
-                    width: 180
-                    height: 50
-                    color: "#ffffff"
-                    border.width: 1
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: parent.bottom
-                    anchors.topMargin: 10
-
-                    TextArea {
-                        id: textArea
-                        text: "https://www.youtube.com/watch?v=2F8HvKqnp5s"
-                        font.family: "Arial"
-                        antialiasing: false
-                        font.pointSize: 8
-                        anchors.fill: parent
-                    }
-                }
-
-            }
-
-            Button {
-                id: host_button
-                x: 16
-                y: 131
-                text: qsTr("Host")
-            }
-
-            Button {
-                id: client_button
-                x: 110
-                y: 131
-                text: qsTr("Client")
-            }
-        }
+        client: client
+        host: host
     }
 
     Rectangle {
@@ -198,11 +148,6 @@ ApplicationWindow {
     }
 
     Connections {
-        target: button
-        onClicked: mpv.command(["loadfile", textArea.text])
-    }
-
-    Connections {
         target: control_hover
         onExited: control_box.opacity = 0
     }
@@ -229,16 +174,6 @@ ApplicationWindow {
         onDoubleClicked: if (window.visibility != 5) {window.showFullScreen()} else {window.showNormal()}
     }
 
-    Connections {
-        target: side_area
-        onExited: side_menu.opacity = 0
-    }
-
-    Connections {
-        target: side_area
-        onEntered: side_menu.opacity = 1
-    }
-
     Connections{
         target: timer
         onTriggered: {
@@ -262,26 +197,6 @@ ApplicationWindow {
             screen_area.mouseIdleTime = 0
             screen_area.cursorShape = Qt.ArrowCursor
         }
-    }
-
-    Connections {
-        target: host_button
-        onClicked: {
-            client_button.enabled = false
-            host_button.enabled = false
-            host.openConnection()
-        }
-
-    }
-
-    Connections {
-        target: client_button
-        onClicked: {
-            host_button.enabled = false
-            client_button.enabled = false
-            client.connect()
-        }
-
     }
 
     Connections {

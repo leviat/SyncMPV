@@ -7,7 +7,7 @@
 #include <qbytearray.h>
 #include <qstring.h>
 
-namespace network {
+namespace sync {
 
 class Protocol
 {

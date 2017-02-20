@@ -9,24 +9,29 @@ HEADERS += \
     mplayer/mpvobject.hpp \
     mplayer/mpvrenderer.hpp \
     mplayer/mpveventemitter.hpp \
-    network/protocol.hpp \
-    network/host.hpp \
-    network/client.hpp
+    network/hostsocket.hpp \
+    network/clientsocket.hpp \
+    sync/protocol.hpp \
+    sync/host.hpp \
+    sync/client.hpp
 
 SOURCES += \
     mplayer/mpvobject.cpp \
     mplayer/mpvrenderer.cpp \
     main.cpp \
     mplayer/mpveventemitter.cpp \
-    network/protocol.cpp \
-    network/host.cpp \
-    network/client.cpp
+    network/clientsocket.cpp \
+    network/hostsocket.cpp \
+    sync/protocol.cpp \
+    sync/host.cpp \
+    sync/client.cpp
 
 DISTFILES += \
     view/main.qml \
     ../.travis.yml \
     ../.gitignore \
-    ../README.md
+    ../README.md \
+    view/Sidebar.qml
 
 win32: LIBS += -L$$PWD/../libmpv/ -lmpv
 
