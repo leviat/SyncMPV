@@ -38,16 +38,6 @@ int main(int argc, char **argv)
     QQmlApplicationEngine engine;
     sync::ClientInfoModel model;
 
-    // Some test code
-
-    sync::ClientInfo* cInfo = new sync::ClientInfo();
-    cInfo->setAddress(QHostAddress("127.0.0.1"));
-    cInfo->setName("Leo");
-    cInfo->setPort(8000);
-    cInfo->setBufferProgress(50);
-    cInfo->setPlayProgress(20);
-    model.addClientInfo(cInfo);
-
     engine.rootContext()->setContextProperty("clientInfoModel", &model);
     engine.load("view/main.qml");
 

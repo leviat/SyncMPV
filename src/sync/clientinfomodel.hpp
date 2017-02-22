@@ -27,7 +27,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QHash<int, QByteArray> ClientInfoModel::roleNames() const;
+    QHash<int, QByteArray> roleNames() const;
     void addClientInfo(ClientInfo* clientInfo);
 
 
