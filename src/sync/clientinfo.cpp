@@ -26,7 +26,7 @@ quint16 ClientInfo::playProgress() {
     return m_playProgress;
 }
 
-void ClientInfo::setAddress(QHostAddress &address) {
+void ClientInfo::setAddress(QHostAddress address) {
     m_address = address;
     emit addressChanged();
 }

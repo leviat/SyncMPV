@@ -11,8 +11,7 @@ ClientInfoModel::ClientInfoModel(QObject *parent) : QAbstractTableModel(parent)
     // Some test code
 
     ClientInfo* cInfo = new ClientInfo();
-    QHostAddress addr("127.0.0.1");
-    cInfo->setAddress(addr);
+    cInfo->setAddress(QHostAddress("127.0.0.1"));
     cInfo->setName("Leo");
     cInfo->setPort(8000);
     cInfo->setBufferProgress(50);

@@ -32,7 +32,7 @@ public:
         quint16 bufferProgress();
         quint16 playProgress();
 
-        void setAddress(QHostAddress &address);
+        void setAddress(QHostAddress address);
         void setPort(quint16 port);
         void setName(QString name);
         void setBufferProgress(quint16 bufferProgress);
