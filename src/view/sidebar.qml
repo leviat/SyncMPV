@@ -157,33 +157,9 @@ Rectangle {
                 }
             }
 
-            model: ListModel {
-                ListElement {
-                    name: "localhost"
-                    playProgress: 10
-                    bufferProgress: 5
-                }
-
-                ListElement {
-                    name: "Red"
-                    playProgress: 20
-                    bufferProgress: 100
-                }
-
-                ListElement {
-                    name: "Blue"
-                    playProgress: 50
-                    bufferProgress: 5
-                }
-
-                ListElement {
-                    name: "Green"
-                    playProgress: 100
-                    bufferProgress: 0
-                }
-            }
-
+            model: clientInfoModel
         }
+
     }
 
     Connections {

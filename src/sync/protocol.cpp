@@ -1,6 +1,7 @@
 #include "protocol.hpp"
 
 #define PROTOCOL_QT_VERSION QDataStream::Qt_5_2
+
 // Qt
 #include <qdatastream.h>
 #include <qiodevice.h>

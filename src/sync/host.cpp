@@ -2,34 +2,35 @@
 
 #include <mplayer/mpvobject.hpp>
 #include <sync/protocol.hpp>
+#include <sync/clientinfomodel.hpp>
 #include <network/hostsocket.hpp>
 
 //Qt
 #include <QTcpSocket>
+#include <QQmlListProperty>
 
 namespace sync {
 
 
 Host::Host(QObject *parent) : QObject (parent)
 {
-    QObject::connect(&socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
+    QObject::connect(&m_socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
 }
 
 void Host::openConnection() {
-    socket.openConnection();
+    m_socket.openConnection();
 }
 
 void Host::closeConnection() {
-    socket.closeConnection();
+    m_socket.closeConnection();
 }
 
 void Host::broadcastPlayerState() {
-
     mplayer::MpvObject* mpv = reinterpret_cast<mplayer::MpvObject*>(sender());
     mplayer::state playerState = mpv->state();
     QByteArray packet;
     sync::Protocol::toSyncPacket(packet, playerState);
-    socket.broadcast(packet);
+    m_socket.broadcast(packet);
 }
 
 void Host::processPackage() {
@@ -39,9 +40,9 @@ void Host::processPackage() {
 
     if (packet.phase == Protocol::INIT) {
         QString name = Protocol::toName(packet.data);
-        for ( auto clientInfo : clients) {
-            if( clientInfo->address == client->peerAddress()) {
-                clientInfo->name = name;
+        for ( auto clientInfo : m_clients) {
+            if( clientInfo->address() == client->peerAddress()) {
+                clientInfo->name() = name;
             }
         }
     }
@@ -53,10 +54,24 @@ void Host::processPackage() {
 }
 
 void Host::addClient(QTcpSocket* client) {
-    std::shared_ptr<ClientInfo> clientInfo = std::make_shared<ClientInfo>(client->peerAddress(), client->peerPort(), "", 0, 0);
-    qDebug() << clientInfo->address;
+    ClientInfo* clientInfo = new ClientInfo();
+    clientInfo->setAddress(client->peerAddress());
+    clientInfo->setPort(client->peerPort());
+    qDebug() << clientInfo->address();
     QObject::connect(client, &QTcpSocket::readyRead, this, &Host::processPackage);
-    clients.append(clientInfo);
+    m_clients.append(clientInfo);
+    QObject::connect(client, &QTcpSocket::disconnected, this, [=]() { removeClient(client->peerAddress()) ;});
+}
+
+void Host::removeClient(QHostAddress& address) {
+    ClientInfo* clientToRemove = nullptr;
+
+    for( auto clientInfo : m_clients) {
+        if (clientInfo->address() == address)
+            clientToRemove = clientInfo;
+    }
+
+    m_clients.removeOne(clientToRemove);
 }
 
 } // namespace Sync

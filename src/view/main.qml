@@ -9,6 +9,7 @@ import QtQuick.Controls 1.3 // ApplicationWindow
 
 ApplicationWindow {
     id: window
+    title: "Leo of the Storm"
     width: 1280
     height: 720
     visible: true

@@ -14,7 +14,8 @@ HEADERS += \
     sync/protocol.hpp \
     sync/host.hpp \
     sync/client.hpp \
-    sync/clientinfo.hpp
+    sync/clientinfo.hpp \
+    sync/clientinfomodel.hpp
 
 SOURCES += \
     mplayer/mpvobject.cpp \
@@ -26,7 +27,8 @@ SOURCES += \
     sync/protocol.cpp \
     sync/host.cpp \
     sync/client.cpp \
-    sync/clientinfo.cpp
+    sync/clientinfo.cpp \
+    sync/clientinfomodel.cpp
 
 DISTFILES += \
     view/main.qml \

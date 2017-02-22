@@ -6,6 +6,8 @@
 
 #include <sync/host.hpp>
 #include <sync/client.hpp>
+#include <sync/clientinfo.hpp>
+#include <sync/clientinfomodel.hpp>
 
 // Qt
 #include <QObject>
@@ -33,14 +35,29 @@ int main(int argc, char **argv)
     qmlRegisterType<sync::Host>("syncmpv", 1, 0, "Host");
     qmlRegisterType<sync::Client>("syncmpv", 1, 0, "Client");
 
-    QQmlApplicationEngine engine("view/main.qml");
+    QQmlApplicationEngine engine;
+    sync::ClientInfoModel model;
+
+    // Some test code
+
+    sync::ClientInfo* cInfo = new sync::ClientInfo();
+    cInfo->setAddress(QHostAddress("127.0.0.1"));
+    cInfo->setName("Leo");
+    cInfo->setPort(8000);
+    cInfo->setBufferProgress(50);
+    cInfo->setPlayProgress(20);
+    model.addClientInfo(cInfo);
+
+    engine.rootContext()->setContextProperty("clientInfoModel", &model);
+    engine.load("view/main.qml");
+
 
     mplayer::MpvObject* mpv = engine.rootObjects().first()->findChild<mplayer::MpvObject*>("mpv");
     network::HostSocket* host = engine.rootObjects().first()->findChild<network::HostSocket*>("host");
     //network::Client* client = engine.rootObjects().first()->findChild<network::Client*>("client");
 
-    //TODO QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &network::HostSocket::broadcastPlayerState);
 
+    //TODO QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &network::HostSocket::broadcastPlayerState);
     return app.exec();
 
 }

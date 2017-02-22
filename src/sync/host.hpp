@@ -16,11 +16,14 @@ class Host : public QObject
     Q_OBJECT
 
 private:
-    network::HostSocket socket;
-    QList<std::shared_ptr<ClientInfo>> clients;
+    network::HostSocket m_socket;
+    QList<ClientInfo*> m_clients; //remove!!!!
 
 public:
     Host(QObject *parent = 0);
+
+
+signals:
 
 public slots:
     void broadcastPlayerState();
@@ -28,6 +31,7 @@ public slots:
     void addClient(QTcpSocket* client);
     void openConnection();
     void closeConnection();
+    void removeClient(QHostAddress& address);
 
 };
 
