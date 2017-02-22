@@ -63,7 +63,7 @@ void Host::addClient(QTcpSocket* client) {
     QObject::connect(client, &QTcpSocket::disconnected, this, [=]() { removeClient(client->peerAddress()) ;});
 }
 
-void Host::removeClient(QHostAddress& address) {
+void Host::removeClient(QHostAddress address) {
     ClientInfo* clientToRemove = nullptr;
 
     for( auto clientInfo : m_clients) {
