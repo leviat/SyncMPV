@@ -29,7 +29,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QHash<int, QByteArray> roleNames() const;
     void addClientInfo(ClientInfo* clientInfo);
-
+    void setName(QHostAddress address, QString name);
+    void removeClientInfo(QHostAddress address);
 
 
 };

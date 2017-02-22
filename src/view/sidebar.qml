@@ -15,14 +15,6 @@ Rectangle {
     property Client client: client
     property Host host: host
 
-    Client {
-        id: client
-    }
-
-    Host {
-        id: host
-    }
-
     MouseArea {
         id: side_area
         hoverEnabled: true
@@ -52,8 +44,7 @@ Rectangle {
                 TextArea {
                     id: textArea
                     text: "https://www.youtube.com/watch?v=2F8HvKqnp5s"
-                    font.family: "Arial"
-                    antialiasing: false
+                    antialiasing: true
                     font.pointSize: 8
                     anchors.fill: parent
                 }
@@ -85,7 +76,7 @@ Rectangle {
             anchors.rightMargin: -10
             anchors.left: parent.left
             anchors.leftMargin: 10
-            spacing: 10
+            spacing: 16
 
             delegate: Item {
                 height: 40
@@ -96,7 +87,8 @@ Rectangle {
 
                     Text {
                         text: name
-                        font.bold: true
+                        antialiasing: true
+                        font.pointSize: 8
                     }
 
                     ProgressBar { // play progress

@@ -3,8 +3,11 @@
 
 #include <network/hostsocket.hpp>
 #include <sync/clientinfo.hpp>
+#include <sync/clientinfomodel.hpp>
 
 #include <memory>
+
+#include <mplayer/mpvobject.hpp>
 
 // Qt
 #include <QObject>
@@ -17,11 +20,13 @@ class Host : public QObject
 
 private:
     network::HostSocket m_socket;
-    QList<ClientInfo*> m_clients; //remove!!!!
+    ClientInfoModel* m_clientInfoModel;
+    mplayer::MpvObject* m_mpv;
 
 public:
     Host(QObject *parent = 0);
-
+    void setClientInfoModel(ClientInfoModel* clientInfoModel);
+    void setMpv(mplayer::MpvObject* mpv_instance);
 
 signals:
 

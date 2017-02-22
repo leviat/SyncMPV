@@ -17,6 +17,14 @@ ClientInfoModel::ClientInfoModel(QObject *parent) : QAbstractTableModel(parent)
     cInfo->setBufferProgress(50);
     cInfo->setPlayProgress(20);
     addClientInfo(cInfo);
+
+    cInfo = new ClientInfo();
+    cInfo->setAddress(QHostAddress("127.0.0.1"));
+    cInfo->setName("Dominik");
+    cInfo->setPort(8000);
+    cInfo->setBufferProgress(50);
+    cInfo->setPlayProgress(20);
+    addClientInfo(cInfo);
 }
 
 QHash<int, QByteArray> ClientInfoModel::roleNames() const {
@@ -78,6 +86,27 @@ void ClientInfoModel::addClientInfo(ClientInfo* clientInfo)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_clients.append(clientInfo);
     endInsertRows();
+}
+
+void ClientInfoModel::setName(QHostAddress address, QString name) {
+    for (int i = 0; i < m_clients.size(); i++) {
+        if (m_clients[i]->address() == address) {
+            m_clients[i]->setName(name);
+            emit dataChanged(index(i, 2), index(i, 2));
+            break;
+        }
+    }
+}
+
+void ClientInfoModel::removeClientInfo(QHostAddress address) {
+    for (int i = 0; i < m_clients.size(); i++) {
+        if (m_clients[i]->address() == address) {
+            beginRemoveRows(QModelIndex(), i,i);
+            m_clients.removeAt(i);
+            endRemoveRows();
+        }
+    }
+
 }
 
 } // namespace sync

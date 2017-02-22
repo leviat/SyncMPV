@@ -41,13 +41,16 @@ int main(int argc, char **argv)
     engine.rootContext()->setContextProperty("clientInfoModel", &model);
     engine.load("view/main.qml");
 
-
     mplayer::MpvObject* mpv = engine.rootObjects().first()->findChild<mplayer::MpvObject*>("mpv");
-    network::HostSocket* host = engine.rootObjects().first()->findChild<network::HostSocket*>("host");
-    //network::Client* client = engine.rootObjects().first()->findChild<network::Client*>("client");
+    sync::Host* host = engine.rootObjects().first()->findChild<sync::Host*>("host");
+    sync::Client* client = engine.rootObjects().first()->findChild<sync::Client*>("client");
 
+    client->setMpv(mpv);
+    host->setClientInfoModel(&model);
+    host->setMpv(mpv);
 
-    //TODO QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &network::HostSocket::broadcastPlayerState);
+    QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &sync::Host::broadcastPlayerState);
+
     return app.exec();
 
 }

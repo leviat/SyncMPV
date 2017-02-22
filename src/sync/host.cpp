@@ -14,6 +14,7 @@ namespace sync {
 
 Host::Host(QObject *parent) : QObject (parent)
 {
+    m_clientInfoModel = new ClientInfoModel();
     QObject::connect(&m_socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
 }
 
@@ -40,11 +41,7 @@ void Host::processPackage() {
 
     if (packet.phase == Protocol::INIT) {
         QString name = Protocol::toName(packet.data);
-        for ( auto clientInfo : m_clients) {
-            if( clientInfo->address() == client->peerAddress()) {
-                clientInfo->name() = name;
-            }
-        }
+        m_clientInfoModel->setName(client->peerAddress(), name);
     }
 
     if (packet.phase == Protocol::SYNC) {
@@ -57,21 +54,26 @@ void Host::addClient(QTcpSocket* client) {
     ClientInfo* clientInfo = new ClientInfo();
     clientInfo->setAddress(client->peerAddress());
     clientInfo->setPort(client->peerPort());
+    m_clientInfoModel->addClientInfo(clientInfo);
+
     qDebug() << clientInfo->address();
     QObject::connect(client, &QTcpSocket::readyRead, this, &Host::processPackage);
-    m_clients.append(clientInfo);
     QObject::connect(client, &QTcpSocket::disconnected, this, [=]() { removeClient(client->peerAddress()) ;});
 }
 
 void Host::removeClient(QHostAddress address) {
-    ClientInfo* clientToRemove = nullptr;
+    m_clientInfoModel->removeClientInfo(address);
+}
 
-    for( auto clientInfo : m_clients) {
-        if (clientInfo->address() == address)
-            clientToRemove = clientInfo;
+void Host::setClientInfoModel(ClientInfoModel* clientInfoModel) {
+    if (clientInfoModel != m_clientInfoModel) {
+        delete m_clientInfoModel;
+        m_clientInfoModel = clientInfoModel;
     }
+}
 
-    m_clients.removeOne(clientToRemove);
+void Host::setMpv(mplayer::MpvObject *mpv_instance) {
+    m_mpv = mpv_instance;
 }
 
 } // namespace Sync

@@ -37,7 +37,7 @@ ClientSocket::ClientSocket()
 
     QObject::connect(&socket, &QTcpSocket::stateChanged,  [=](){ qDebug() << "Client state: " << socket.state(); });
     QObject::connect(&socket, &QTcpSocket::connected, this, &ClientSocket::connected);
-    QObject::connect(&socket, &QTcpSocket::connected, this, &ClientSocket::newData);
+    QObject::connect(&socket, &QTcpSocket::readyRead, this, &ClientSocket::newData);
 
 }
 

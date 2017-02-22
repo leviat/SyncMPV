@@ -70,11 +70,11 @@ signals:
     void onUpdate();
     void playtimeChanged();
     void volumeChanged();
-    void stateChanged();
+    void stateChanged(mplayer::state newState);
 
 public slots:
-    void command(const QVariant& params);
-    void setProperty(const QString& name, const QVariant& value);
+    void command(const QVariant params);
+    void setProperty(const QString name, const QVariant value);
     void updateState();
 
 private slots:

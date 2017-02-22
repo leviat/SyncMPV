@@ -134,7 +134,7 @@ void MpvObject::doUpdate()
 /*!
     \brief MpvObject::command passes the commands as \a params to the mpv-player.
 */
-void MpvObject::command(const QVariant& params)
+void MpvObject::command(const QVariant params)
 {
     mpv::qt::command_variant(mpv, params);
 }
@@ -201,8 +201,9 @@ double MpvObject::volume() {
 /*!
     \brief Sets the  mpv \a property to the \a value.
 */
-void MpvObject::setProperty(const QString& property, const QVariant& value)
+void MpvObject::setProperty(const QString property, const QVariant value)
 {
+    qDebug() << property;
     mpv::qt::set_property_variant(mpv, property, value);
 }
 
@@ -236,7 +237,7 @@ void MpvObject::updateState() {
 
     stateMutex.unlock();
 
-    emit stateChanged();
+    emit stateChanged(m_state);
 
 }
 
