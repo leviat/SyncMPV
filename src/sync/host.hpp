@@ -31,7 +31,7 @@ public slots:
     void addClient(QTcpSocket* client);
     void openConnection();
     void closeConnection();
-    void removeClient(QHostAddress& address);
+    void removeClient(QHostAddress address);
 
 };
 
