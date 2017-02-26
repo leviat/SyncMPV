@@ -14,9 +14,9 @@ namespace sync {
 
 Host::Host(QObject *parent) : QObject (parent)
 {
-    m_clientInfoModel = new ClientInfoModel();
+    m_clientInfoModel = new ClientInfoModel;
     QObject::connect(&m_socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
-
+    qDebug() << "boop";
 }
 
 void Host::openConnection() {
@@ -90,7 +90,7 @@ void Host::removeClient(QHostAddress address) {
 }
 
 void Host::setClientInfoModel(ClientInfoModel* clientInfoModel) {
-    if (clientInfoModel != m_clientInfoModel) {
+    if (m_clientInfoModel != nullptr && clientInfoModel != m_clientInfoModel) {
         delete m_clientInfoModel;
         m_clientInfoModel = clientInfoModel;
     }

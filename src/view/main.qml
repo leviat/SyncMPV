@@ -13,14 +13,16 @@ ApplicationWindow {
     height: 720
     visible: true
 
-    Client {
-        id: client
-        objectName: "client"
-    }
+    Item {
+        Client {
+            id: client
+            objectName: "client"
+        }
 
-    Host {
-        id: host
-        objectName: "host"
+        Host {
+            id: host
+            objectName: "host"
+        }
     }
 
     MpvObject {

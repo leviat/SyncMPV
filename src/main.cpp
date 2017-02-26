@@ -46,10 +46,9 @@ int main(int argc, char **argv)
     sync::Host* host = engine.rootObjects().first()->findChild<sync::Host*>("host");
     sync::Client* client = engine.rootObjects().first()->findChild<sync::Client*>("client");
 
-    QMetaObject::invokeMethod(client, "setMpv", Q_ARG(mplayer::MpvObject*, mpv));
-    QMetaObject::invokeMethod(host, "setClientInfoModel", Q_ARG(sync::ClientInfoModel*, &model));
-    QMetaObject::invokeMethod(host, "setMpv", Q_ARG(mplayer::MpvObject*, mpv));
-
+    host->setMpv(mpv);
+    host->setClientInfoModel(&model);
+    client->setMpv(mpv);
     return app.exec();
 
 }
