@@ -56,8 +56,6 @@ namespace mplayer {
 MpvObject::MpvObject(QQuickItem * parent)
     : QQuickFramebufferObject(parent), mpv_gl(0)
 {
-    m_state = {PAUSE, 0};
-
     mpv = mpv::qt::Handle::FromRawHandle(mpv_create());
     if (!mpv)
         throw std::runtime_error("could not create mpv context");
@@ -203,7 +201,6 @@ double MpvObject::volume() {
 */
 void MpvObject::setProperty(const QString property, const QVariant value)
 {
-    qDebug() << property;
     mpv::qt::set_property_variant(mpv, property, value);
 }
 
@@ -211,46 +208,55 @@ void MpvObject::setProperty(const QString property, const QVariant value)
     \brief Retrieves the media player's state from the mpv thread and stores it in an internal data structure.
 */
 void MpvObject::updateState() {
-    stateMutex.lock();
+    mplayer::state state = {PAUSE, 0};
 
     QVariant coreIdleProperty = mpv::qt::get_property(mpv, "core-idle");
-    QVariant pauseProperty = mpv::qt::get_property(mpv, "pause");
-    QVariant pausedForCacheProperty = mpv::qt::get_property(mpv, "paused-for-cache");
 
-    if (isError(coreIdleProperty) || isError(pauseProperty) || isError(pausedForCacheProperty))
-        m_state.playState = PAUSE;
+    if (isError(coreIdleProperty))
+        state.playState = PAUSE;
     else if (coreIdleProperty.toBool() == false)
-        m_state.playState = PLAY;
-    else if (pauseProperty.toBool() == true)
-        m_state.playState = PAUSE;
-    else if (pausedForCacheProperty.toBool() == true)
-        m_state.playState = BUFFERING;
+        state.playState = PLAY;
     else
-        m_state.playState = PAUSE;
+        state.playState = PAUSE;
 
     QVariant timeProperty = mpv::qt::get_property(mpv, "time-pos");
-
     if (isError(timeProperty))
-        m_state.playTime = 0;
+        state.playTime = 0;
     else
-        m_state.playTime = timeProperty.toDouble();
+        state.playTime = timeProperty.toDouble();
 
-    stateMutex.unlock();
+    QVariant demuxerCacheProperty = mpv::qt::get_property(mpv, "demuxer-cache-duration");
+    if (isError(demuxerCacheProperty))
+        state.demuxerCache = 0;
+    else
+        state.demuxerCache = demuxerCacheProperty.toDouble();
 
-    emit stateChanged(m_state);
+    QVariant additionalCacheProperty = mpv::qt::get_property(mpv, "cache-used");
+    if (isError(additionalCacheProperty))
+        state.additionalCache = 0;
+    else
+        state.additionalCache = additionalCacheProperty.toDouble();
+
+    emit stateChanged(state);
 
 }
 
-/*!
- * \brief Returns the media player's state.
- */
+void MpvObject::updateMediumInfo() {
+    mediumInfo info;
+    QVariant lengthProperty = mpv::qt::get_property(mpv, "length");
+    QVariant sizeProperty = mpv::qt::get_property(mpv, "size");
 
-mplayer::state MpvObject::state() {
-    stateMutex.lock();
-    mplayer::state state = m_state;
-    stateMutex.unlock();
+    if (isError(lengthProperty))
+        info.duration = 0;
+    else
+        info.duration = lengthProperty.toUInt();
 
-    return state;
+    if (isError(sizeProperty))
+        info.fileSize = 0;
+    else
+        info.fileSize = sizeProperty.toDouble() / 1024;
+
+    emit mediumChanged(info);
 }
 
 } //namespace mplayer

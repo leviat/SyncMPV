@@ -26,11 +26,13 @@ public:
 
 signals:
     void propertyChange(QString name, QVariant value);
+    void command(QVariant params);
 
 public slots:
     void connect();
     void disconnect();
     void setState(mplayer::state state);
+    void sendPlayerState(mplayer::state state);
 
 };
 

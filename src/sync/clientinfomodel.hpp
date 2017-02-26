@@ -30,6 +30,8 @@ public:
     QHash<int, QByteArray> roleNames() const;
     void addClientInfo(ClientInfo* clientInfo);
     void setName(QHostAddress address, QString name);
+    void setBufferProgress(QHostAddress address, quint16 bufferProgress);
+    void setPlayProgress(QHostAddress address, quint16 playProgress);
     void removeClientInfo(QHostAddress address);
 
 

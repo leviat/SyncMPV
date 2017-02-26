@@ -22,6 +22,7 @@ private:
     network::HostSocket m_socket;
     ClientInfoModel* m_clientInfoModel;
     mplayer::MpvObject* m_mpv;
+    mplayer::mediumInfo m_mediumInfo;
 
 public:
     Host(QObject *parent = 0);
@@ -31,12 +32,13 @@ public:
 signals:
 
 public slots:
-    void broadcastPlayerState();
+    void broadcastPlayerState(mplayer::state state);
     void processPackage();
     void addClient(QTcpSocket* client);
     void openConnection();
     void closeConnection();
     void removeClient(QHostAddress address);
+    void setMediumInfo(mplayer::mediumInfo mediumInfo);
 
 };
 

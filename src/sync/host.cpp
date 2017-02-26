@@ -16,6 +16,7 @@ Host::Host(QObject *parent) : QObject (parent)
 {
     m_clientInfoModel = new ClientInfoModel();
     QObject::connect(&m_socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
+
 }
 
 void Host::openConnection() {
@@ -26,11 +27,9 @@ void Host::closeConnection() {
     m_socket.closeConnection();
 }
 
-void Host::broadcastPlayerState() {
-    mplayer::MpvObject* mpv = reinterpret_cast<mplayer::MpvObject*>(sender());
-    mplayer::state playerState = mpv->state();
+void Host::broadcastPlayerState(mplayer::state state) {
     QByteArray packet;
-    sync::Protocol::toSyncPacket(packet, playerState);
+    sync::Protocol::toSyncPacket(packet, state);
     m_socket.broadcast(packet);
 }
 
@@ -45,7 +44,32 @@ void Host::processPackage() {
     }
 
     if (packet.phase == Protocol::SYNC) {
-        //mplayer::state playerState = Protocol::toPlayerState(packet.data);
+        mplayer::state playerState = Protocol::toPlayerState(packet.data);
+
+        quint16 bufferProgress = 0;
+
+        // in percent = (currentBuffer in s) / remaining media duration
+        // demuxer buffer / remainingDuration in s + addBuffer / (remainingDuration in percent * file size)
+        quint16 playProgress = 0; // currentDuration / fullduration in s
+
+        if (m_mediumInfo.duration == 0 || m_mediumInfo.fileSize == 0) {
+            bufferProgress = 100;
+            playProgress = 100;
+        }
+        else {
+            double remainingkB = (1 - playerState.playTime / m_mediumInfo.duration) * m_mediumInfo.fileSize;
+            double progress = playerState.demuxerCache / (m_mediumInfo.duration - playerState.playTime); //demuxer
+            progress += playerState.additionalCache / remainingkB;
+            bufferProgress = progress * 100;
+            playProgress = playerState.playTime / m_mediumInfo.duration * 100;
+        }
+
+        m_clientInfoModel->setBufferProgress(client->peerAddress(), bufferProgress);
+        m_clientInfoModel->setPlayProgress(client->peerAddress(), playProgress);
+
+        if (playerState.playState == mplayer::BUFFERING) {
+            // broadcast pause and wait until everyone has sufficient buffer
+        }
     }
 
 }
@@ -72,8 +96,15 @@ void Host::setClientInfoModel(ClientInfoModel* clientInfoModel) {
     }
 }
 
+void Host::setMediumInfo(mplayer::mediumInfo mediumInfo) {
+    m_mediumInfo = mediumInfo;
+}
+
 void Host::setMpv(mplayer::MpvObject *mpv_instance) {
     m_mpv = mpv_instance;
+    QObject::connect(m_mpv, &mplayer::MpvObject::stateChanged, this, &sync::Host::broadcastPlayerState);
+    QObject::connect(m_mpv, &mplayer::MpvObject::mediumChanged, this, &sync::Host::setMediumInfo);
+
 }
 
 } // namespace Sync

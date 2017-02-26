@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     sync::ClientInfoModel model;
 
     engine.rootContext()->setContextProperty("clientInfoModel", &model);
-    engine.load("view/main.qml");
+    engine.load("../src/view/main.qml");
 
     mplayer::MpvObject* mpv = engine.rootObjects().first()->findChild<mplayer::MpvObject*>("mpv");
     sync::Host* host = engine.rootObjects().first()->findChild<sync::Host*>("host");
@@ -48,8 +48,6 @@ int main(int argc, char **argv)
     client->setMpv(mpv);
     host->setClientInfoModel(&model);
     host->setMpv(mpv);
-
-    QObject::connect(mpv, &mplayer::MpvObject::stateChanged, host, &sync::Host::broadcastPlayerState);
 
     return app.exec();
 

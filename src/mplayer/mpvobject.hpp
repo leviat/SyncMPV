@@ -18,16 +18,23 @@ namespace mplayer {
 enum playState {
     PLAY,
     PAUSE,
-    BUFFERING
+    BUFFERING //deprecated
 };
 
 struct state {
         mplayer::playState playState;
         double playTime;
+        double demuxerCache; // in seconds
+        double additionalCache; // in kB
+};
+
+struct mediumInfo {
+    uint duration; // in s, length property
+    double fileSize; // in kilobytes, size property (turned to kB)
 };
 
 /*====================================================================*/
-/* CLASS DEFINITIONS                                                                                      */
+/* CLASS DEFINITIONS                                                  */
 /*====================================================================*/
 
 class MpvObject : public QQuickFramebufferObject
@@ -40,18 +47,16 @@ class MpvObject : public QQuickFramebufferObject
     friend class MpvRenderer;
 
     /*====================================================================*/
-    /* VARIABLES                                                                                                    */
+    /* VARIABLES                                                          */
     /*====================================================================*/
 
 private:
     mpv::qt::Handle mpv;
     mpv_opengl_cb_context *mpv_gl;
     MpvEventEmitter* eventEmitter;
-    QMutex stateMutex;
-    mplayer::state m_state;
 
     /*====================================================================*/
-    /* FUNCTIONS                                                                                                   */
+    /* FUNCTIONS                                                          */
     /*====================================================================*/
 
 public:
@@ -71,11 +76,13 @@ signals:
     void playtimeChanged();
     void volumeChanged();
     void stateChanged(mplayer::state newState);
+    void mediumChanged(mplayer::mediumInfo mediumInfo);
 
 public slots:
     void command(const QVariant params);
     void setProperty(const QString name, const QVariant value);
     void updateState();
+    void updateMediumInfo();
 
 private slots:
     void doUpdate();

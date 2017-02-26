@@ -19,7 +19,7 @@ class MpvEventEmitter : public QThread
     Q_OBJECT
 
     /*====================================================================*/
-    /* VARIABLES                                                                                                    */
+    /* VARIABLES                                                          */
     /*====================================================================*/
 
 private:
@@ -27,7 +27,7 @@ private:
     bool shouldTerminate;
 
     /*====================================================================*/
-    /* FUNCTIONS                                                                                                   */
+    /* FUNCTIONS                                                          */
     /*====================================================================*/
 
 public:
@@ -41,6 +41,7 @@ signals:
     void playtimeChanged();
     void volumeChanged();
     void stateChanged();
+    void mediumChanged();
 };
 
 } // namespace mplayer

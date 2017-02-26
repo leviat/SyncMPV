@@ -98,6 +98,27 @@ void ClientInfoModel::setName(QHostAddress address, QString name) {
     }
 }
 
+void ClientInfoModel::setBufferProgress(QHostAddress address, quint16 bufferProgress) {
+    for (int i = 0; i < m_clients.size(); i++) {
+        if (m_clients[i]->address() == address) {
+            m_clients[i]->setBufferProgress(bufferProgress);
+            emit dataChanged(index(i, 3), index(i, 3));
+            break;
+        }
+    }
+}
+
+void ClientInfoModel::setPlayProgress(QHostAddress address, quint16 playProgress) {
+    for (int i = 0; i < m_clients.size(); i++) {
+        if (m_clients[i]->address() == address) {
+            m_clients[i]->setPlayProgress(playProgress);
+            emit dataChanged(index(i, 4), index(i, 4));
+            break;
+        }
+    }
+}
+
+
 void ClientInfoModel::removeClientInfo(QHostAddress address) {
     for (int i = 0; i < m_clients.size(); i++) {
         if (m_clients[i]->address() == address) {

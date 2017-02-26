@@ -26,6 +26,8 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     mpv_observe_property(mpv, 0, "time-pos", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "ao-volume", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "core-idle", MPV_FORMAT_NONE);
+    mpv_observe_property(mpv, 0, "size", MPV_FORMAT_NONE);
+    mpv_observe_property(mpv, 0, "length", MPV_FORMAT_NONE);
 
     // when the audio is initially played, mpv doesn't emit an event for the change of ao-volume
     // we also listen to a change of the codec instead to catch the first time audio is played
@@ -63,6 +65,13 @@ void MpvEventEmitter::run(){
 
             if (eventName == "time-pos" || eventName == "core-idle")
                 emit stateChanged();
+        }
+
+        if (event->event_id == MPV_EVENT_PROPERTY_CHANGE) {
+            QString eventName =  QString(reinterpret_cast<mpv_event_property*>(event->data)->name);
+
+            if (eventName == "length" || eventName == "size")
+                emit mediumChanged();
         }
     }
 }

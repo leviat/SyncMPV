@@ -26,14 +26,15 @@ QDataStream & operator>> (QDataStream& stream, Protocol::Packet& packet) {
 }
 
 QDataStream & operator<< (QDataStream& stream, const mplayer::state& playerState) {
-    stream << (int)playerState.playState;
-    stream << playerState.playTime;
+    stream << (int)playerState.playState << playerState.playTime
+           << playerState.demuxerCache << playerState.additionalCache;
     return stream;
 }
 
 QDataStream & operator>> (QDataStream& stream, mplayer::state& playerState) {
     int iPlayState = 0;
-    stream >> iPlayState >> playerState.playTime;
+    stream >> iPlayState >> playerState.playTime
+           >> playerState.demuxerCache >> playerState.additionalCache;
 
     playerState.playState = static_cast<mplayer::playState>(iPlayState);
 
@@ -46,10 +47,7 @@ QDataStream & operator<< (QDataStream& stream, const Protocol::SyncData& data) {
 }
 
 QDataStream & operator>> (QDataStream& stream, Protocol::SyncData& packet) {
-    int iPlayState = 0;
-    stream >> iPlayState >> packet.playerState.playTime;
-
-    packet.playerState.playState = static_cast<mplayer::playState>(iPlayState);
+    stream >> packet.playerState;
     return stream;
 }
 
