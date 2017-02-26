@@ -201,6 +201,7 @@ double MpvObject::volume() {
 */
 void MpvObject::setProperty(const QString property, const QVariant value)
 {
+    qDebug() << property << value;
     mpv::qt::set_property_variant(mpv, property, value);
 }
 
@@ -257,6 +258,24 @@ void MpvObject::updateMediumInfo() {
         info.fileSize = sizeProperty.toDouble() / 1024;
 
     emit mediumChanged(info);
+}
+
+bool MpvObject::paused() {
+    QVariant pausedProperty = mpv::qt::get_property(mpv, "pause");
+
+    if (isError(pausedProperty))
+        return true;
+    else
+        return pausedProperty.toBool();
+}
+
+void MpvObject::switchPause() {
+    QVariant pausedProperty = mpv::qt::get_property(mpv, "pause");
+
+    if (isError(pausedProperty))
+        return;
+
+    setProperty("pause", !pausedProperty.toBool());
 }
 
 } //namespace mplayer

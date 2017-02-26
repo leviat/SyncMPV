@@ -11,6 +11,8 @@ Client::Client(QObject *parent) : QObject(parent)
 {
     m_currentState = {mplayer::PAUSE, 0};
     m_hostAddress = "127.0.0.1";
+    m_speedAdjusted = false;
+    m_speedIncreased = false;
 }
 
 void Client::connect(){
@@ -42,45 +44,47 @@ void Client::processPackage() {
     if (packet.phase == Protocol::SYNC) {
         mplayer::state playerState = Protocol::toPlayerState(packet.data);
 
-        if (playerState.playState == mplayer::BUFFERING || playerState.playState == mplayer::PAUSE) {
+        if (playerState.playState != mplayer::PLAY && m_currentState.playState == mplayer::PLAY) {
             emit propertyChange("pause", true);
         }
-        else if (playerState.playState == mplayer::PLAY) {
+        else if (playerState.playState == mplayer::PLAY && m_currentState.playState != mplayer::PLAY) {
             emit propertyChange("pause", false);
         }
 
         double timeDiff = playerState.playTime - m_currentState.playTime;
-
-        double speedInterval = 0.20;
-
         // Only seek for sync when we are totally off
         // Might allow lower seek thresholds for files with fast seeking
 
-        if (std::abs(timeDiff) > 5.0 && m_currentState.demuxerCache > 0.1) {
+        if (std::abs(timeDiff) > 10.0 && m_currentState.demuxerCache > 0.1) {
             QList<QVariant> paramList;
             paramList << QVariant("seek") << QVariant(playerState.playTime) << QVariant("absolute");
             emit command(QVariant(paramList));
         }
-        else if (timeDiff > 0.2 ) {
-            // we could make this dynamic, however changing the speed frequently is noticable as distorted audio
-            // also, setting the correctionspeed too low delays the point where host and client get in sync again
-            // for now, we just aggresively get the players in sync asap
-            // some hysteresis might be good, though
-            double correctionSpeed = 2;
-            int fullQuotient = correctionSpeed / speedInterval;
-            correctionSpeed = speedInterval * fullQuotient;
-            emit propertyChange("speed", correctionSpeed);
-
-        }
-        else if (timeDiff < -0.2 ) {
-            double correctionSpeed = 0.5;// 1.00 + std::max(timeDiff, -1.0);
-            int fullQuotient = correctionSpeed / speedInterval;
-            correctionSpeed = speedInterval * fullQuotient;
-            emit propertyChange("speed", correctionSpeed);
+        else if (m_speedAdjusted) {
+            if ((timeDiff < 0.2 && m_speedIncreased) || (timeDiff > 0.2 && !m_speedIncreased)){
+                emit propertyChange("speed", 1.0);
+                m_speed = 1.0;
+                m_speedAdjusted = false;
+            }
         }
         else {
-            emit propertyChange("speed", 1.0);
+            if (timeDiff > 1.0 ) {
+                emit propertyChange("speed", 1.5);
+                m_speed = 1.5;
+                m_speedAdjusted = true;
+                m_speedIncreased = true;
+            }
+            else if (timeDiff < -1.0 ) {
+                emit propertyChange("speed", 0.8);
+                m_speed = 0.8;
+                m_speedAdjusted = true;
+                m_speedIncreased = false;
+            }
         }
+
+        qDebug() << "[" << timeDiff << ", " << m_speed << "]";
+
+
     }
 
 }

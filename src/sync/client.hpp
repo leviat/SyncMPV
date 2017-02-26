@@ -20,6 +20,9 @@ private:
     mplayer::MpvObject* m_mpv;
     mplayer::state m_currentState;
     QString m_hostAddress;
+    bool m_speedAdjusted;
+    bool m_speedIncreased;
+    double m_speed = 1.0;
 
 public:
     explicit Client(QObject *parent = 0);

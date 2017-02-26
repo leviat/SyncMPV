@@ -173,6 +173,15 @@ ApplicationWindow {
                     font.pixelSize: 12
                 }
             }
+
+            Button {
+                id: pauseButton
+                x: 273
+                y: 34
+                text: qsTr("Pause")
+                checked: mpv.paused
+
+            }
         }
 
     }
@@ -235,6 +244,11 @@ ApplicationWindow {
             host.closeConnection()
             client.disconnect()
         }
+    }
+
+    Connections {
+        target: pauseButton
+        onClicked: mpv.switchPause(true)
     }
 
 }

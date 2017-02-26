@@ -28,6 +28,8 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     mpv_observe_property(mpv, 0, "core-idle", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "size", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "length", MPV_FORMAT_NONE);
+    mpv_observe_property(mpv, 0, "pause", MPV_FORMAT_NONE);
+
 
     // when the audio is initially played, mpv doesn't emit an event for the change of ao-volume
     // we also listen to a change of the codec instead to catch the first time audio is played
@@ -35,7 +37,7 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
 
     connect(this, &MpvEventEmitter::playtimeChanged, mpvObject, &MpvObject::playtimeChanged, Qt::QueuedConnection);
     connect(this, &MpvEventEmitter::volumeChanged, mpvObject, &MpvObject::volumeChanged, Qt::QueuedConnection);
-
+    connect(this, &MpvEventEmitter::pausedChanged, mpvObject, &MpvObject::pausedChanged, Qt::QueuedConnection);
     connect(this, &MpvEventEmitter::stateChanged, mpvObject, &MpvObject::updateState, Qt::QueuedConnection);
 
 
@@ -57,6 +59,8 @@ void MpvEventEmitter::run(){
                 emit playtimeChanged();
             else if (eventName == "ao-volume" || eventName == "audio-codec")
                 emit volumeChanged();
+            else if (eventName == "pause")
+                emit pausedChanged();
         }
 
         // Sync relevant changes
