@@ -110,6 +110,30 @@ ApplicationWindow {
                         opacity: 0
                         anchors.fill: parent
                     }
+
+                    ProgressBar { // buffer progress
+                        width: parent.width - Math.ceil(parent.visualPosition * parent.width)
+                        anchors.left: parent.left
+                        anchors.leftMargin: Math.floor(parent.visualPosition * parent.width)
+                        height: parent.height
+                        value: mpv.bufferProgress
+                        from: 0
+                        to: 100
+
+                        background: Rectangle {
+                            color: "#e6e6e6"
+                        }
+
+                        contentItem: Item {
+                            Rectangle {
+                                width: parent.parent.visualPosition * parent.width
+                                height: parent.height
+                                color: "orange"
+                            }
+                        }
+
+                    }
+
                 }
 
                 Text {

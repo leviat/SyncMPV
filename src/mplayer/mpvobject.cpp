@@ -208,7 +208,7 @@ void MpvObject::setProperty(const QString property, const QVariant value)
 /*!
     \brief Retrieves the media player's state from the mpv thread and stores it in an internal data structure.
 */
-void MpvObject::updateState() {
+mplayer::state MpvObject::updateState() {
     mplayer::state state = {PAUSE, 0};
 
     QVariant coreIdleProperty = mpv::qt::get_property(mpv, "core-idle");
@@ -239,10 +239,10 @@ void MpvObject::updateState() {
         state.additionalCache = additionalCacheProperty.toDouble();
 
     emit stateChanged(state);
-
+    return state;
 }
 
-void MpvObject::updateMediumInfo() {
+mediumInfo MpvObject::updateMediumInfo() {
     mediumInfo info;
     QVariant lengthProperty = mpv::qt::get_property(mpv, "duration");
     QVariant sizeProperty = mpv::qt::get_property(mpv, "file-size");
@@ -258,6 +258,8 @@ void MpvObject::updateMediumInfo() {
         info.fileSize = sizeProperty.toDouble() / 1024;
 
     emit mediumChanged(info);
+
+    return info;
 }
 
 bool MpvObject::paused() {
@@ -267,6 +269,17 @@ bool MpvObject::paused() {
         return true;
     else
         return pausedProperty.toBool();
+}
+
+double MpvObject::bufferProgress() {
+    mediumInfo medium = updateMediumInfo();
+    mplayer::state player = updateState();
+
+    double remainingkB = (1 - player.playTime / medium.duration) * medium.fileSize;
+    double progress = player.demuxerCache / (medium.duration - player.playTime); //demuxer
+    progress += player.additionalCache / remainingkB;
+
+    return progress * 100;
 }
 
 void MpvObject::switchPause() {

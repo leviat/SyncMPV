@@ -27,8 +27,8 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     mpv_observe_property(mpv, 0, "ao-volume", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "core-idle", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "file-size", MPV_FORMAT_NONE);
-    mpv_observe_property(mpv, 0, "duration", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "pause", MPV_FORMAT_NONE);
+    mpv_observe_property(mpv, 0, "demuxer-cache-duration", MPV_FORMAT_NONE);
 
 
     // when the audio is initially played, mpv doesn't emit an event for the change of ao-volume
@@ -40,6 +40,7 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     connect(this, &MpvEventEmitter::pausedChanged, mpvObject, &MpvObject::pausedChanged, Qt::QueuedConnection);
     connect(this, &MpvEventEmitter::stateChanged, mpvObject, &MpvObject::updateState, Qt::QueuedConnection);
     connect(this, &MpvEventEmitter::mediumChanged, mpvObject, &MpvObject::updateMediumInfo, Qt::QueuedConnection);
+    connect(this, &MpvEventEmitter::bufferChanged, mpvObject, &MpvObject::bufferProgressChanged, Qt::QueuedConnection);
 
 
 }
@@ -62,6 +63,8 @@ void MpvEventEmitter::run(){
                 emit volumeChanged();
             else if (eventName == "pause")
                 emit pausedChanged();
+            else if (eventName == "demuxer-cache-duration")
+                emit bufferChanged();
         }
 
         // Sync relevant changes
@@ -75,7 +78,7 @@ void MpvEventEmitter::run(){
         if (event->event_id == MPV_EVENT_PROPERTY_CHANGE) {
             QString eventName =  QString(reinterpret_cast<mpv_event_property*>(event->data)->name);
 
-            if (eventName == "duration" || eventName == "file-size")
+            if (eventName == "file-size")
                 emit mediumChanged();
         }
     }

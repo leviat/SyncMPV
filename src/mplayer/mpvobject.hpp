@@ -42,6 +42,7 @@ class MpvObject : public QQuickFramebufferObject
     Q_OBJECT
     Q_PROPERTY(QString playtime READ playtime NOTIFY playtimeChanged)
     Q_PROPERTY(double percentPlaytime READ percentPlaytime NOTIFY playtimeChanged)
+    Q_PROPERTY(double bufferProgress READ bufferProgress NOTIFY bufferProgressChanged)
     Q_PROPERTY(double volume READ volume NOTIFY volumeChanged)
     Q_PROPERTY(bool paused READ paused NOTIFY pausedChanged)
 
@@ -67,6 +68,7 @@ public:
     QString playtime();
     double volume();
     double percentPlaytime();
+    double bufferProgress();
     bool paused();
     mplayer::state state();
 
@@ -80,12 +82,13 @@ signals:
     void stateChanged(mplayer::state newState);
     void mediumChanged(mplayer::mediumInfo mediumInfo);
     void pausedChanged();
+    void bufferProgressChanged();
 
 public slots:
     void command(const QVariant params);
     void setProperty(const QString name, const QVariant value);
-    void updateState();
-    void updateMediumInfo();
+    mplayer::state updateState();
+    mediumInfo updateMediumInfo();
     void switchPause();
 
 private slots:

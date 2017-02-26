@@ -43,6 +43,7 @@ signals:
     void stateChanged();
     void mediumChanged();
     void pausedChanged();
+    void bufferChanged();
 };
 
 } // namespace mplayer
