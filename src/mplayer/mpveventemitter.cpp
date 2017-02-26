@@ -26,8 +26,8 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     mpv_observe_property(mpv, 0, "time-pos", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "ao-volume", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "core-idle", MPV_FORMAT_NONE);
-    mpv_observe_property(mpv, 0, "size", MPV_FORMAT_NONE);
-    mpv_observe_property(mpv, 0, "length", MPV_FORMAT_NONE);
+    mpv_observe_property(mpv, 0, "file-size", MPV_FORMAT_NONE);
+    mpv_observe_property(mpv, 0, "duration", MPV_FORMAT_NONE);
     mpv_observe_property(mpv, 0, "pause", MPV_FORMAT_NONE);
 
 
@@ -39,6 +39,7 @@ MpvEventEmitter::MpvEventEmitter(mpv::qt::Handle mpv, MpvObject *mpvObject)
     connect(this, &MpvEventEmitter::volumeChanged, mpvObject, &MpvObject::volumeChanged, Qt::QueuedConnection);
     connect(this, &MpvEventEmitter::pausedChanged, mpvObject, &MpvObject::pausedChanged, Qt::QueuedConnection);
     connect(this, &MpvEventEmitter::stateChanged, mpvObject, &MpvObject::updateState, Qt::QueuedConnection);
+    connect(this, &MpvEventEmitter::mediumChanged, mpvObject, &MpvObject::updateMediumInfo, Qt::QueuedConnection);
 
 
 }
@@ -74,7 +75,7 @@ void MpvEventEmitter::run(){
         if (event->event_id == MPV_EVENT_PROPERTY_CHANGE) {
             QString eventName =  QString(reinterpret_cast<mpv_event_property*>(event->data)->name);
 
-            if (eventName == "length" || eventName == "size")
+            if (eventName == "duration" || eventName == "file-size")
                 emit mediumChanged();
         }
     }

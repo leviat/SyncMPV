@@ -17,6 +17,7 @@ public:
         Name,
         BufferProgress,
         PlayProgress,
+        BufferString
     };
 
 private:
@@ -32,6 +33,7 @@ public:
     void setName(QHostAddress address, QString name);
     void setBufferProgress(QHostAddress address, quint16 bufferProgress);
     void setPlayProgress(QHostAddress address, quint16 playProgress);
+    void setBufferString(QHostAddress address, QString bufferString);
     void removeClientInfo(QHostAddress address);
 
 

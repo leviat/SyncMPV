@@ -29,6 +29,10 @@ public:
     void sendName();
     void processPackage();
 
+private:
+    void adjustPlayState(mplayer::state playerState);
+    void adjustSyncSpeed(mplayer::state playerState);
+
 signals:
     void propertyChange(QString name, QVariant value);
     void command(QVariant params);

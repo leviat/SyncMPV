@@ -43,50 +43,49 @@ void Client::processPackage() {
 
     if (packet.phase == Protocol::SYNC) {
         mplayer::state playerState = Protocol::toPlayerState(packet.data);
-
-        if (playerState.playState != mplayer::PLAY && m_currentState.playState == mplayer::PLAY) {
-            emit propertyChange("pause", true);
-        }
-        else if (playerState.playState == mplayer::PLAY && m_currentState.playState != mplayer::PLAY) {
-            emit propertyChange("pause", false);
-        }
-
-        double timeDiff = playerState.playTime - m_currentState.playTime;
-        // Only seek for sync when we are totally off
-        // Might allow lower seek thresholds for files with fast seeking
-
-        if (std::abs(timeDiff) > 10.0 && m_currentState.demuxerCache > 0.1) {
-            QList<QVariant> paramList;
-            paramList << QVariant("seek") << QVariant(playerState.playTime) << QVariant("absolute");
-            emit command(QVariant(paramList));
-        }
-        else if (m_speedAdjusted) {
-            if ((timeDiff < 0.2 && m_speedIncreased) || (timeDiff > 0.2 && !m_speedIncreased)){
-                emit propertyChange("speed", 1.0);
-                m_speed = 1.0;
-                m_speedAdjusted = false;
-            }
-        }
-        else {
-            if (timeDiff > 1.0 ) {
-                emit propertyChange("speed", 1.5);
-                m_speed = 1.5;
-                m_speedAdjusted = true;
-                m_speedIncreased = true;
-            }
-            else if (timeDiff < -1.0 ) {
-                emit propertyChange("speed", 0.8);
-                m_speed = 0.8;
-                m_speedAdjusted = true;
-                m_speedIncreased = false;
-            }
-        }
-
-        qDebug() << "[" << timeDiff << ", " << m_speed << "]";
-
-
+        adjustPlayState(playerState);
+        adjustSyncSpeed(playerState);
     }
 
+}
+
+void Client::adjustPlayState(mplayer::state playerState) {
+    if (playerState.playState != mplayer::PLAY && m_currentState.playState == mplayer::PLAY) {
+        emit propertyChange("pause", true);
+    }
+    else if (playerState.playState == mplayer::PLAY && m_currentState.playState != mplayer::PLAY) {
+        emit propertyChange("pause", false);
+    }
+}
+
+void Client::adjustSyncSpeed(mplayer::state playerState){
+    double timeDiff = playerState.playTime - m_currentState.playTime;
+    // Only seek for sync when we are totally off
+    // Might allow lower seek thresholds for files with fast seeking
+
+    if (std::abs(timeDiff) > 10.0 && m_currentState.demuxerCache > 0.1) {
+        QList<QVariant> paramList;
+        paramList << QVariant("seek") << QVariant(playerState.playTime) << QVariant("absolute");
+        emit command(QVariant(paramList));
+    }
+    else if (m_speedAdjusted) {
+        if ((timeDiff < 0.2 && m_speedIncreased) || (timeDiff > 0.2 && !m_speedIncreased)){
+            emit propertyChange("speed", 1.0);
+            m_speedAdjusted = false;
+        }
+    }
+    else {
+        if (timeDiff > 1.0 ) {
+            emit propertyChange("speed", 1.5);
+            m_speedAdjusted = true;
+            m_speedIncreased = true;
+        }
+        else if (timeDiff < -1.0 ) {
+            emit propertyChange("speed", 0.8);
+            m_speedAdjusted = true;
+            m_speedIncreased = false;
+        }
+    }
 }
 
 void Client::setMpv(mplayer::MpvObject *mpvInstance) {

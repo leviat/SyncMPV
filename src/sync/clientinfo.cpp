@@ -26,6 +26,10 @@ quint16 ClientInfo::playProgress() {
     return m_playProgress;
 }
 
+QString ClientInfo::bufferString() {
+    return m_bufferString;
+}
+
 void ClientInfo::setAddress(QHostAddress address) {
     m_address = address;
     emit addressChanged();
@@ -51,5 +55,9 @@ void ClientInfo::setPort(quint16 port) {
     emit portChanged();
 }
 
+void ClientInfo::setBufferString(QString bufferString) {
+    m_bufferString = bufferString;
+    emit bufferStringChanged();
+}
 
 } // namespace sync

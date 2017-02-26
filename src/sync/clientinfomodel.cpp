@@ -14,16 +14,18 @@ ClientInfoModel::ClientInfoModel(QObject *parent) : QAbstractTableModel(parent)
     cInfo->setAddress(QHostAddress("127.0.0.1"));
     cInfo->setName("Leo");
     cInfo->setPort(8000);
-    cInfo->setBufferProgress(50);
+    cInfo->setBufferProgress(20);
     cInfo->setPlayProgress(20);
+    cInfo->setBufferString("buffer: 5s+10kB");
     addClientInfo(cInfo);
 
     cInfo = new ClientInfo();
     cInfo->setAddress(QHostAddress("127.0.0.1"));
     cInfo->setName("Dominik");
     cInfo->setPort(8000);
-    cInfo->setBufferProgress(50);
+    cInfo->setBufferProgress(10);
     cInfo->setPlayProgress(20);
+    cInfo->setBufferString("buffer: 2s+100kB");
     addClientInfo(cInfo);
 }
 
@@ -34,6 +36,7 @@ QHash<int, QByteArray> ClientInfoModel::roleNames() const {
     roles[Name] = "name";
     roles[BufferProgress] = "bufferProgress";
     roles[PlayProgress] = "playProgress";
+    roles[BufferString] = "bufferString";
 
     return roles;
 }
@@ -74,6 +77,9 @@ QVariant ClientInfoModel::data(const QModelIndex &index, int role) const {
         case PlayProgress:
             return clientInfo->playProgress();
             break;
+        case BufferString:
+            return clientInfo->bufferString();
+            break;
         default:
             return clientInfo->name();
             break;
@@ -113,6 +119,16 @@ void ClientInfoModel::setPlayProgress(QHostAddress address, quint16 playProgress
         if (m_clients[i]->address() == address) {
             m_clients[i]->setPlayProgress(playProgress);
             emit dataChanged(index(i, 4), index(i, 4));
+            break;
+        }
+    }
+}
+
+void ClientInfoModel::setBufferString(QHostAddress address, QString bufferString) {
+    for (int i = 0; i < m_clients.size(); i++) {
+        if (m_clients[i]->address() == address) {
+            m_clients[i]->setBufferString(bufferString);
+            emit dataChanged(index(i, 5), index(i, 5));
             break;
         }
     }

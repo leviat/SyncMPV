@@ -133,23 +133,19 @@ Rectangle {
 
                             ProgressBar { // play progress
                                 Layout.preferredWidth: side_area.width - 20
-                                Layout.preferredHeight: 22
+                                Layout.preferredHeight: 20
                                 value: playProgress
                                 from: 0
                                 to: 100
 
-                                background: Rectangle {
-                                    radius: 2
-                                    color: "lightgray"
-                                    border.color: "gray"
-                                    border.width: 1
-                                    implicitWidth: 200
-                                    implicitHeight: 24
-                                }
+                                contentItem: Item {
 
-                                contentItem: Rectangle {
-                                    color: "lightsteelblue"
-                                    border.color: "steelblue"
+                                    Rectangle {
+                                        width: parent.parent.visualPosition * parent.width
+                                        height: parent.height
+                                        color: "#17a81a"
+
+                                    }
                                 }
 
                                 ProgressBar { // buffer progress
@@ -162,22 +158,23 @@ Rectangle {
                                     to: 100
 
                                     background: Rectangle {
-                                        radius: 2
-                                        color: "lightgray"
-                                        border.color: "gray"
-                                        border.width: 1
                                         implicitWidth: 200
-                                        implicitHeight: 24
+                                        implicitHeight: 6
+                                        color: "#e6e6e6"
                                     }
-                                    contentItem: Rectangle {
-                                        color: "orange"
-                                        border.color: "brown"
+
+                                    contentItem: Item {
+                                        Rectangle {
+                                            width: parent.parent.visualPosition * parent.width
+                                            height: parent.height
+                                            color: "orange"
+                                        }
                                     }
 
                                 }
 
                                 Text {
-                                    text: "buffer"
+                                    text: bufferString
                                     style: Text.Normal
                                     verticalAlignment: Text.AlignVCenter
                                     horizontalAlignment: Text.AlignHCenter

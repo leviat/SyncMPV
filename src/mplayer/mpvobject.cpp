@@ -244,8 +244,8 @@ void MpvObject::updateState() {
 
 void MpvObject::updateMediumInfo() {
     mediumInfo info;
-    QVariant lengthProperty = mpv::qt::get_property(mpv, "length");
-    QVariant sizeProperty = mpv::qt::get_property(mpv, "size");
+    QVariant lengthProperty = mpv::qt::get_property(mpv, "duration");
+    QVariant sizeProperty = mpv::qt::get_property(mpv, "file-size");
 
     if (isError(lengthProperty))
         info.duration = 0;

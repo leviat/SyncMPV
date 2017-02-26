@@ -16,7 +16,6 @@ Host::Host(QObject *parent) : QObject (parent)
 {
     m_clientInfoModel = new ClientInfoModel;
     QObject::connect(&m_socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
-    qDebug() << "boop";
 }
 
 void Host::openConnection() {
@@ -47,10 +46,7 @@ void Host::processPackage() {
         mplayer::state playerState = Protocol::toPlayerState(packet.data);
 
         quint16 bufferProgress = 0;
-
-        // in percent = (currentBuffer in s) / remaining media duration
-        // demuxer buffer / remainingDuration in s + addBuffer / (remainingDuration in percent * file size)
-        quint16 playProgress = 0; // currentDuration / fullduration in s
+        quint16 playProgress = 0;
 
         if (m_mediumInfo.duration == 0 || m_mediumInfo.fileSize == 0) {
             bufferProgress = 100;
@@ -64,8 +60,11 @@ void Host::processPackage() {
             playProgress = playerState.playTime / m_mediumInfo.duration * 100;
         }
 
+        QString bufferString = QString("buffer: %1s+%2MB").arg((int)playerState.demuxerCache).arg((int)playerState.additionalCache/1024);
+        qDebug() << bufferString;
         m_clientInfoModel->setBufferProgress(client->peerAddress(), bufferProgress);
         m_clientInfoModel->setPlayProgress(client->peerAddress(), playProgress);
+        m_clientInfoModel->setBufferString(client->peerAddress(), bufferString);
 
         if (playerState.playState == mplayer::BUFFERING) {
             // broadcast pause and wait until everyone has sufficient buffer
@@ -78,6 +77,7 @@ void Host::addClient(QTcpSocket* client) {
     ClientInfo* clientInfo = new ClientInfo();
     clientInfo->setAddress(client->peerAddress());
     clientInfo->setPort(client->peerPort());
+    clientInfo->setBufferString("buffer: 0s+0kB");
     m_clientInfoModel->addClientInfo(clientInfo);
 
     qDebug() << clientInfo->address();

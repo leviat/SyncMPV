@@ -15,6 +15,8 @@ class ClientInfo : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(quint16 bufferProgress READ bufferProgress WRITE setBufferProgress NOTIFY bufferProgressChanged)
     Q_PROPERTY(quint16 playProgress READ playProgress WRITE setPlayProgress NOTIFY playProgressChanged)
+    Q_PROPERTY(QString bufferString READ bufferString WRITE setBufferString NOTIFY bufferStringChanged)
+
 
 private:
         QHostAddress m_address;
@@ -22,6 +24,7 @@ private:
         QString m_name;
         quint16 m_bufferProgress;
         quint16 m_playProgress;
+        QString m_bufferString;
 
 public:
         ClientInfo(QObject *parent = 0);
@@ -31,12 +34,14 @@ public:
         QString name();
         quint16 bufferProgress();
         quint16 playProgress();
+        QString bufferString();
 
         void setAddress(QHostAddress address);
         void setPort(quint16 port);
         void setName(QString name);
         void setBufferProgress(quint16 bufferProgress);
         void setPlayProgress(quint16 playProgress);
+        void setBufferString(QString bufferString);
 
 signals:
         void addressChanged();
@@ -44,6 +49,7 @@ signals:
         void nameChanged();
         void bufferProgressChanged();
         void playProgressChanged();
+        void bufferStringChanged();
 
 public slots:
 };
