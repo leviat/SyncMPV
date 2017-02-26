@@ -13,16 +13,18 @@ class Client : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString hostAddress MEMBER m_hostAddress)
+
 private:
     network::ClientSocket m_socket;
     mplayer::MpvObject* m_mpv;
     mplayer::state m_currentState;
+    QString m_hostAddress;
 
 public:
     explicit Client(QObject *parent = 0);
     void sendName();
     void processPackage();
-    void setMpv(mplayer::MpvObject* mpvInstance);
 
 signals:
     void propertyChange(QString name, QVariant value);
@@ -33,6 +35,7 @@ public slots:
     void disconnect();
     void setState(mplayer::state state);
     void sendPlayerState(mplayer::state state);
+    void setMpv(mplayer::MpvObject* mpvInstance);
 
 };
 

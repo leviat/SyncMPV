@@ -1,11 +1,10 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
+import QtQuick 2.5
 
 import syncmpv 1.0
 
-import QtQuick.Layouts 1.3
-import QtQuick.Window 2.2
-import QtQuick.Controls 1.3 // ApplicationWindow
+import QtQuick.Layouts 1.1
+import QtQuick.Window 2.0
+import QtQuick.Controls 2.1
 
 ApplicationWindow {
     id: window
@@ -49,8 +48,6 @@ ApplicationWindow {
 
     Sidebar {
         id: side_menu
-        x: 132
-        width: 200
         color: "#ffffff"
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
@@ -92,9 +89,10 @@ ApplicationWindow {
                 anchors.topMargin: 5
 
                 ProgressBar {
-                    id: progressBar
+                    id: playProgress
                     width: 200
-                    maximumValue: 100
+                    from: 0
+                    to: 100
                     visible: true
                     Layout.minimumWidth: 50
                     Layout.fillWidth: true
@@ -105,7 +103,8 @@ ApplicationWindow {
                         anchors.rightMargin: -10
                         anchors.leftMargin: -10
                         stepSize: 0.1
-                        maximumValue: 100
+                        from: 0
+                        to: 100
                         opacity: 0
                         anchors.fill: parent
                     }
@@ -131,9 +130,37 @@ ApplicationWindow {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 stepSize: 1
-                updateValueWhileDragging: true
-                maximumValue: 100
+                from: 0
+                to: 100
                 value: mpv.volume
+
+                handle: Rectangle {
+                    x: volume_slider.leftPadding + volume_slider.visualPosition * (volume_slider.availableWidth - width)
+                    y: volume_slider.topPadding + volume_slider.availableHeight / 2 - height / 2
+                    implicitWidth: 16
+                    implicitHeight: 16
+                    radius: 8
+                    color: volume_slider.pressed ? "#f0f0f0" : "#f6f6f6"
+                    border.color: "#bdbebf"
+                }
+
+                background: Rectangle {
+                    x: volume_slider.leftPadding
+                    y: volume_slider.topPadding + volume_slider.availableHeight / 2 - height / 2
+                    implicitWidth: 200
+                    implicitHeight: 4
+                    width: volume_slider.availableWidth
+                    height: implicitHeight
+                    radius: 2
+                    color: "#bdbebf"
+
+                    Rectangle {
+                        width: volume_slider.visualPosition * parent.width
+                        height: parent.height
+                        color: "#21be2b"
+                        radius: 2
+                    }
+                }
 
                 Text {
                     id: volume_text

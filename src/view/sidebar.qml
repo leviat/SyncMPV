@@ -2,13 +2,12 @@ import QtQuick 2.0
 import QtQuick.Controls.Styles 1.4
 import syncmpv 1.0
 
-import QtQuick.Layouts 1.3
+import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
-import QtQuick.Controls 1.3 // ApplicationWindow
+import QtQuick.Controls 2.1
 
 
 Rectangle {
-    x: 132
     width: 200
     color: "#ffffff"
 
@@ -20,107 +19,125 @@ Rectangle {
         hoverEnabled: true
         anchors.fill: parent
 
-        Button {
-            id: load_button
-            x: 62
-            y: 10
-            text: qsTr("Load")
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 10
+        ColumnLayout {
+            id: mainColumn
+            anchors.fill: parent
 
-            Rectangle {
-                id: textframe
-                x: -52
-                y: 63
-                width: 180
+            spacing: 5
+
+            Item {
+                id: fileLoader
+                width: 200
                 height: 50
-                color: "#ffffff"
-                border.width: 1
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: parent.bottom
-                anchors.topMargin: 10
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                Layout.fillWidth: true
+                Layout.preferredHeight: 70
+                Layout.preferredWidth: 200
+                Layout.minimumWidth: 180
+                Layout.minimumHeight: 70
 
-                TextArea {
-                    id: textArea
-                    text: "https://www.youtube.com/watch?v=2F8HvKqnp5s"
-                    antialiasing: true
-                    font.pointSize: 8
-                    anchors.fill: parent
-                }
-            }
+                Rectangle {
+                    id: textframe
+                    width: 180
+                    height: 25
+                    color: "#ffffff"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 10
+                    border.width: 1
 
-        }
-
-        Button {
-            id: host_button
-            x: 16
-            y: 131
-            text: qsTr("Host")
-        }
-
-        Button {
-            id: client_button
-            x: 110
-            y: 131
-            text: qsTr("Client")
-        }
-
-        ListView {
-            id: clients_list
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            anchors.top: host_button.bottom
-            anchors.topMargin: 30
-            anchors.right: parent.right
-            anchors.rightMargin: -10
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            spacing: 16
-
-            delegate: Item {
-                height: 40
-
-                ColumnLayout {
-                    id: columnLayout
-                    height: parent.height
-
-                    Text {
-                        text: name
+                    TextField {
+                        id: textArea
+                        anchors.fill: parent
+                        placeholderText: "URL / File path"
                         antialiasing: true
                         font.pointSize: 8
                     }
+                }
 
-                    ProgressBar { // play progress
-                        Layout.preferredWidth: side_area.width - 20
-                        Layout.preferredHeight: 22
-                        value: playProgress
-                        maximumValue: 100
+                Button {
+                    id: load_button
+                    x: 0
+                    y: 0
+                    width: 60
+                    height: 20
+                    text: qsTr("Load")
+                    anchors.horizontalCenterOffset: 0
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 45
 
-                        style: ProgressBarStyle {
-                            background: Rectangle {
-                                radius: 2
-                                color: "lightgray"
-                                border.color: "gray"
-                                border.width: 1
-                                implicitWidth: 200
-                                implicitHeight: 24
-                            }
-                            progress: Rectangle {
-                                color: "lightsteelblue"
-                                border.color: "steelblue"
-                            }
-                        }
+                }
+            }
 
-                        ProgressBar { // buffer progress
-                            width: side_area.width - 20 - Math.ceil(parent.value / 100 * parent.width)
-                            anchors.left: parent.left
-                            anchors.leftMargin: Math.floor(parent.value / 100 * parent.width)
+            ToolSeparator {
+                y: 0
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                orientation: Qt.Horizontal
+            }
+
+            Item {
+                id: hostClientArea
+                y: 0
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+
+                Button {
+                    id: client_button
+                    width: 70
+                    height: 20
+                    text: qsTr("Client")
+                    anchors.top: parent.top
+                    anchors.topMargin: 0
+                    anchors.right: parent.right
+                    anchors.rightMargin: 15
+                }
+
+                Button {
+                    id: host_button
+                    x: 0
+                    y: 0
+                    width: 70
+                    height: 20
+                    text: qsTr("Host")
+                    highlighted: false
+                    anchors.left: parent.left
+                    anchors.leftMargin: 15
+                }
+
+                ListView {
+                    id: clients_list
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 0
+                    anchors.top: host_button.bottom
+                    anchors.topMargin: 30
+                    anchors.right: parent.right
+                    anchors.rightMargin: -10
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    spacing: 16
+
+                    delegate: Item {
+                        height: 40
+
+                        ColumnLayout {
+                            id: columnLayout
                             height: parent.height
-                            value: bufferProgress
-                            maximumValue: 100
 
-                            style: ProgressBarStyle {
+                            Text {
+                                text: name
+                                antialiasing: true
+                                font.pointSize: 8
+                            }
+
+                            ProgressBar { // play progress
+                                Layout.preferredWidth: side_area.width - 20
+                                Layout.preferredHeight: 22
+                                value: playProgress
+                                from: 0
+                                to: 100
+
                                 background: Rectangle {
                                     radius: 2
                                     color: "lightgray"
@@ -129,27 +146,53 @@ Rectangle {
                                     implicitWidth: 200
                                     implicitHeight: 24
                                 }
-                                progress: Rectangle {
-                                    color: "orange"
-                                    border.color: "brown"
+
+                                contentItem: Rectangle {
+                                    color: "lightsteelblue"
+                                    border.color: "steelblue"
+                                }
+
+                                ProgressBar { // buffer progress
+                                    width: side_area.width - 20 - Math.ceil(parent.value / 100 * parent.width)
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: Math.floor(parent.value / 100 * parent.width)
+                                    height: parent.height
+                                    value: bufferProgress
+                                    from: 0
+                                    to: 100
+
+                                    background: Rectangle {
+                                        radius: 2
+                                        color: "lightgray"
+                                        border.color: "gray"
+                                        border.width: 1
+                                        implicitWidth: 200
+                                        implicitHeight: 24
+                                    }
+                                    contentItem: Rectangle {
+                                        color: "orange"
+                                        border.color: "brown"
+                                    }
+
+                                }
+
+                                Text {
+                                    text: "buffer"
+                                    style: Text.Normal
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    width: parent.width
+                                    height: parent.height
                                 }
                             }
-
-                        }
-
-                        Text {
-                            text: "buffer"
-                            style: Text.Normal
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                            width: parent.width
-                            height: parent.height
                         }
                     }
+
+                    model: clientInfoModel
                 }
+
             }
 
-            model: clientInfoModel
         }
 
     }
@@ -188,6 +231,7 @@ Rectangle {
         }
 
     }
+
 }
 
 

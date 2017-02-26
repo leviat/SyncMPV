@@ -16,6 +16,7 @@
 #include <QGuiApplication>
 #include <QMetaObject>
 #include <QQmlContext>
+#include <QGenericArgument>
 
 #include <QtGui/QOpenGLFramebufferObject>
 
@@ -45,9 +46,9 @@ int main(int argc, char **argv)
     sync::Host* host = engine.rootObjects().first()->findChild<sync::Host*>("host");
     sync::Client* client = engine.rootObjects().first()->findChild<sync::Client*>("client");
 
-    client->setMpv(mpv);
-    host->setClientInfoModel(&model);
-    host->setMpv(mpv);
+    QMetaObject::invokeMethod(client, "setMpv", Q_ARG(mplayer::MpvObject*, mpv));
+    QMetaObject::invokeMethod(host, "setClientInfoModel", Q_ARG(sync::ClientInfoModel*, &model));
+    QMetaObject::invokeMethod(host, "setMpv", Q_ARG(mplayer::MpvObject*, mpv));
 
     return app.exec();
 

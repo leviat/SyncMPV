@@ -10,12 +10,13 @@ namespace sync {
 Client::Client(QObject *parent) : QObject(parent)
 {
     m_currentState = {mplayer::PAUSE, 0};
+    m_hostAddress = "127.0.0.1";
 }
 
 void Client::connect(){
     QObject::connect(&m_socket, &network::ClientSocket::connected, this, &Client::sendName);
 
-    QHostAddress host("127.0.0.1");
+    QHostAddress host(m_hostAddress);
     m_socket.connect(host);
 }
 
