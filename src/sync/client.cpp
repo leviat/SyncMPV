@@ -11,8 +11,10 @@ Client::Client(QObject *parent) : QObject(parent)
 {
     m_currentState = {mplayer::PAUSE, 0};
     m_hostAddress = "127.0.0.1";
+    m_clientPort = 8001;
     m_speedAdjusted = false;
     m_speedIncreased = false;
+    m_speed = 1.0;
 }
 
 void Client::connect(){
@@ -53,7 +55,9 @@ void Client::adjustPlayState(mplayer::state playerState) {
     if (playerState.playState != mplayer::PLAY && m_currentState.playState == mplayer::PLAY) {
         emit propertyChange("pause", true);
     }
-    else if (playerState.playState == mplayer::PLAY && m_currentState.playState != mplayer::PLAY) {
+    else if (playerState.playState == mplayer::PLAY
+                && m_currentState.playState != mplayer::PLAY
+                && m_mediumInfo.fileSize != 0) {
         emit propertyChange("pause", false);
     }
 }
@@ -88,12 +92,18 @@ void Client::adjustSyncSpeed(mplayer::state playerState){
     }
 }
 
+void Client::setMediumInfo(mplayer::mediumInfo mediumInfo) {
+    m_mediumInfo = mediumInfo;
+}
+
 void Client::setMpv(mplayer::MpvObject *mpvInstance) {
     m_mpv = mpvInstance;
 
-    QObject::connect(this, &sync::Client::propertyChange, mpvInstance, &mplayer::MpvObject::setProperty);
-    QObject::connect(this, &sync::Client::command, mpvInstance, &mplayer::MpvObject::command);
-    QObject::connect(mpvInstance, &mplayer::MpvObject::stateChanged, this, &sync::Client::setState);
+    QObject::connect(this, &Client::propertyChange, mpvInstance, &mplayer::MpvObject::setProperty);
+    QObject::connect(this, &Client::command, mpvInstance, &mplayer::MpvObject::command);
+    QObject::connect(mpvInstance, &mplayer::MpvObject::stateChanged, this, &Client::setState);
+    QObject::connect(m_mpv, &mplayer::MpvObject::mediumChanged, this, &Client::setMediumInfo);
+
 }
 
 void Client::setState(mplayer::state state) {

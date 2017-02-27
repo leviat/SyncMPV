@@ -56,6 +56,7 @@ private:
     mpv::qt::Handle mpv;
     mpv_opengl_cb_context *mpv_gl;
     MpvEventEmitter* eventEmitter;
+    bool waitingForBuffer;
 
     /*====================================================================*/
     /* FUNCTIONS                                                          */
@@ -90,6 +91,8 @@ public slots:
     mplayer::state updateState();
     mediumInfo updateMediumInfo();
     void switchPause();
+    void waitForBuffer();
+    void playAfterBuffering();
 
 private slots:
     void doUpdate();

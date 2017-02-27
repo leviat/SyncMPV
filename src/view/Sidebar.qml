@@ -8,6 +8,7 @@ import QtQuick.Controls 2.1
 
 
 Rectangle {
+    id: sidebar
     width: 200
     color: "#ffffff"
 
@@ -78,118 +79,53 @@ Rectangle {
             }
 
             Item {
-                id: hostClientArea
-                y: 0
-                Layout.fillHeight: true
+                id: modeArea
                 Layout.fillWidth: true
+                Layout.maximumHeight: 30
+                Layout.minimumHeight: 20
 
                 Button {
-                    id: client_button
+                    id: clientModeButton
                     width: 70
                     height: 20
-                    text: qsTr("Client")
-                    anchors.top: parent.top
-                    anchors.topMargin: 0
+                    text: qsTr("Client mode")
                     anchors.right: parent.right
                     anchors.rightMargin: 15
                 }
 
                 Button {
-                    id: host_button
-                    x: 0
-                    y: 0
+                    id: hostModeButton
                     width: 70
                     height: 20
-                    text: qsTr("Host")
-                    highlighted: false
+                    text: qsTr("Host mode")
                     anchors.left: parent.left
                     anchors.leftMargin: 15
                 }
-
-                ListView {
-                    id: clients_list
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 0
-                    anchors.top: host_button.bottom
-                    anchors.topMargin: 30
-                    anchors.right: parent.right
-                    anchors.rightMargin: -10
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    spacing: 16
-
-                    delegate: Item {
-                        height: 40
-
-                        ColumnLayout {
-                            id: columnLayout
-                            height: parent.height
-
-                            Text {
-                                text: name
-                                antialiasing: true
-                                font.pointSize: 8
-                            }
-
-                            ProgressBar { // play progress
-                                Layout.preferredWidth: side_area.width - 20
-                                Layout.preferredHeight: 20
-                                value: playProgress
-                                from: 0
-                                to: 100
-
-                                contentItem: Item {
-
-                                    Rectangle {
-                                        width: parent.parent.visualPosition * parent.width
-                                        height: parent.height
-                                        color: "#17a81a"
-
-                                    }
-                                }
-
-                                ProgressBar { // buffer progress
-                                    width: side_area.width - 20 - Math.ceil(parent.value / 100 * parent.width)
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: Math.floor(parent.value / 100 * parent.width)
-                                    height: parent.height
-                                    value: bufferProgress
-                                    from: 0
-                                    to: 100
-
-                                    background: Rectangle {
-                                        implicitWidth: 200
-                                        implicitHeight: 6
-                                        color: "#e6e6e6"
-                                    }
-
-                                    contentItem: Item {
-                                        Rectangle {
-                                            width: parent.parent.visualPosition * parent.width
-                                            height: parent.height
-                                            color: "orange"
-                                        }
-                                    }
-
-                                }
-
-                                Text {
-                                    text: bufferString
-                                    style: Text.Normal
-                                    verticalAlignment: Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignHCenter
-                                    width: parent.width
-                                    height: parent.height
-                                }
-                            }
-                        }
-                    }
-
-                    model: clientInfoModel
-                }
-
             }
 
+            Item {
+                id: hostClientTabArea
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                HostTab {
+                    id: hostTab
+                    host: sidebar.host
+                    enabled: false
+                    visible: false
+                }
+
+                ClientTab {
+                    id: clientTab
+                    client: sidebar.client
+                    enabled: false
+                    visible: false
+                }
+            }
+
+            Item {
+                Layout.fillHeight: true
+            }
         }
 
     }
@@ -210,23 +146,23 @@ Rectangle {
     }
 
     Connections {
-        target: host_button
+        target: hostModeButton
         onClicked: {
-            client_button.enabled = false
-            host_button.enabled = false
-            host.openConnection()
+            modeArea.enabled = false
+            modeArea.visible = false
+            hostTab.enabled = true
+            hostTab.visible = true
         }
-
     }
 
     Connections {
-        target: client_button
+        target: clientModeButton
         onClicked: {
-            host_button.enabled = false
-            client_button.enabled = false
-            client.connect()
+            modeArea.enabled = false
+            modeArea.visible = false
+            clientTab.enabled = true
+            clientTab.visible = true
         }
-
     }
 
 }

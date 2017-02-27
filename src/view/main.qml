@@ -50,7 +50,6 @@ ApplicationWindow {
 
     Sidebar {
         id: side_menu
-        color: "#ffffff"
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
         anchors.top: parent.top

@@ -23,6 +23,7 @@ private:
     ClientInfoModel* m_clientInfoModel;
     mplayer::MpvObject* m_mpv;
     mplayer::mediumInfo m_mediumInfo;
+    QSet<QHostAddress> m_waitingForBuffer;
 
 public:
     Host(QObject *parent = 0);
@@ -30,6 +31,8 @@ public:
     void setMpv(mplayer::MpvObject* mpv_instance);
 
 signals:
+    void waitForBuffer();
+    void bufferIsHealthy();
 
 public slots:
     void broadcastPlayerState(mplayer::state state);
@@ -37,7 +40,7 @@ public slots:
     void addClient(QTcpSocket* client);
     void openConnection();
     void closeConnection();
-    void removeClient(QHostAddress address);
+    void removeClient(QHostAddress address, quint16 port);
     void setMediumInfo(mplayer::mediumInfo mediumInfo);
 
 };

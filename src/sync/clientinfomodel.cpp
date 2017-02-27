@@ -94,56 +94,61 @@ void ClientInfoModel::addClientInfo(ClientInfo* clientInfo)
     endInsertRows();
 }
 
-void ClientInfoModel::setName(QHostAddress address, QString name) {
+int ClientInfoModel::find(QHostAddress address, quint16 port) {
     for (int i = 0; i < m_clients.size(); i++) {
-        if (m_clients[i]->address() == address) {
-            m_clients[i]->setName(name);
-            emit dataChanged(index(i, 2), index(i, 2));
-            break;
+        if (m_clients[i]->address() == address && m_clients[i]->port() == port) {
+            return i;
         }
+    }
+
+    return -1;
+}
+
+void ClientInfoModel::setName(QHostAddress address, quint16 port, QString name) {
+    int i = find(address, port);
+
+    if (i != -1) {
+        m_clients[i]->setName(name);
+        emit dataChanged(index(i, 2), index(i, 2));
     }
 }
 
-void ClientInfoModel::setBufferProgress(QHostAddress address, quint16 bufferProgress) {
-    for (int i = 0; i < m_clients.size(); i++) {
-        if (m_clients[i]->address() == address) {
-            m_clients[i]->setBufferProgress(bufferProgress);
-            emit dataChanged(index(i, 3), index(i, 3));
-            break;
-        }
+void ClientInfoModel::setBufferProgress(QHostAddress address, quint16 port, quint16 bufferProgress) {
+    int i = find(address, port);
+
+    if (i != -1) {
+        m_clients[i]->setBufferProgress(bufferProgress);
+        emit dataChanged(index(i, 3), index(i, 3));
     }
 }
 
-void ClientInfoModel::setPlayProgress(QHostAddress address, quint16 playProgress) {
-    for (int i = 0; i < m_clients.size(); i++) {
-        if (m_clients[i]->address() == address) {
-            m_clients[i]->setPlayProgress(playProgress);
-            emit dataChanged(index(i, 4), index(i, 4));
-            break;
-        }
+void ClientInfoModel::setPlayProgress(QHostAddress address, quint16 port, quint16 playProgress) {
+    int i = find(address, port);
+
+    if (i != -1) {
+        m_clients[i]->setPlayProgress(playProgress);
+        emit dataChanged(index(i, 4), index(i, 4));
     }
 }
 
-void ClientInfoModel::setBufferString(QHostAddress address, QString bufferString) {
-    for (int i = 0; i < m_clients.size(); i++) {
-        if (m_clients[i]->address() == address) {
-            m_clients[i]->setBufferString(bufferString);
-            emit dataChanged(index(i, 5), index(i, 5));
-            break;
-        }
+void ClientInfoModel::setBufferString(QHostAddress address, quint16 port, QString bufferString) {
+    int i = find(address, port);
+
+    if (i != -1) {
+        m_clients[i]->setBufferString(bufferString);
+        emit dataChanged(index(i, 5), index(i, 5));
     }
 }
 
 
-void ClientInfoModel::removeClientInfo(QHostAddress address) {
-    for (int i = 0; i < m_clients.size(); i++) {
-        if (m_clients[i]->address() == address) {
-            beginRemoveRows(QModelIndex(), i,i);
-            m_clients.removeAt(i);
-            endRemoveRows();
-        }
-    }
+void ClientInfoModel::removeClientInfo(QHostAddress address, quint16 port) {
+    int i = find(address, port);
 
+    if (i != -1) {
+        beginRemoveRows(QModelIndex(), i, i);
+        m_clients.removeAt(i);
+        endRemoveRows();
+    }
 }
 
 } // namespace sync

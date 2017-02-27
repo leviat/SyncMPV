@@ -39,7 +39,7 @@ void Host::processPackage() {
 
     if (packet.phase == Protocol::INIT) {
         QString name = Protocol::toName(packet.data);
-        m_clientInfoModel->setName(client->peerAddress(), name);
+        m_clientInfoModel->setName(client->peerAddress(), client->peerPort(), name);
     }
 
     if (packet.phase == Protocol::SYNC) {
@@ -62,12 +62,16 @@ void Host::processPackage() {
 
         QString bufferString = QString("buffer: %1s+%2MB").arg((int)playerState.demuxerCache).arg((int)playerState.additionalCache/1024);
         qDebug() << bufferString;
-        m_clientInfoModel->setBufferProgress(client->peerAddress(), bufferProgress);
-        m_clientInfoModel->setPlayProgress(client->peerAddress(), playProgress);
-        m_clientInfoModel->setBufferString(client->peerAddress(), bufferString);
+        m_clientInfoModel->setBufferProgress(client->peerAddress(), client->peerPort(), bufferProgress);
+        m_clientInfoModel->setPlayProgress(client->peerAddress(), client->peerPort(), playProgress);
+        m_clientInfoModel->setBufferString(client->peerAddress(), client->peerPort(), bufferString);
 
-        if (playerState.playState == mplayer::BUFFERING) {
-            // broadcast pause and wait until everyone has sufficient buffer
+        if (playerState.demuxerCache < 2.0) {
+            emit waitForBuffer();
+            m_waitingForBuffer.insert(client->peerAddress());
+        }
+        else if (m_waitingForBuffer.remove(client->peerAddress()) && m_waitingForBuffer.empty()) {
+            emit bufferIsHealthy();
         }
     }
 
@@ -82,11 +86,11 @@ void Host::addClient(QTcpSocket* client) {
 
     qDebug() << clientInfo->address();
     QObject::connect(client, &QTcpSocket::readyRead, this, &Host::processPackage);
-    QObject::connect(client, &QTcpSocket::disconnected, this, [=]() { removeClient(client->peerAddress()) ;});
+    QObject::connect(client, &QTcpSocket::disconnected, this, [=]() { removeClient(client->peerAddress(), client->peerPort()) ;});
 }
 
-void Host::removeClient(QHostAddress address) {
-    m_clientInfoModel->removeClientInfo(address);
+void Host::removeClient(QHostAddress address, quint16 port) {
+    m_clientInfoModel->removeClientInfo(address, port);
 }
 
 void Host::setClientInfoModel(ClientInfoModel* clientInfoModel) {
@@ -102,8 +106,10 @@ void Host::setMediumInfo(mplayer::mediumInfo mediumInfo) {
 
 void Host::setMpv(mplayer::MpvObject *mpv_instance) {
     m_mpv = mpv_instance;
-    QObject::connect(m_mpv, &mplayer::MpvObject::stateChanged, this, &sync::Host::broadcastPlayerState);
-    QObject::connect(m_mpv, &mplayer::MpvObject::mediumChanged, this, &sync::Host::setMediumInfo);
+    QObject::connect(m_mpv, &mplayer::MpvObject::stateChanged, this, &Host::broadcastPlayerState);
+    QObject::connect(m_mpv, &mplayer::MpvObject::mediumChanged, this, &Host::setMediumInfo);
+    QObject::connect(this, &Host::waitForBuffer, m_mpv, &mplayer::MpvObject::waitForBuffer);
+    QObject::connect(this, &Host::bufferIsHealthy, m_mpv, &mplayer::MpvObject::playAfterBuffering);
 
 }
 

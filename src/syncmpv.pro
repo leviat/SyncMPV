@@ -35,7 +35,9 @@ DISTFILES += \
     ../.travis.yml \
     ../.gitignore \
     ../README.md \
-    view/Sidebar.qml
+    view/Sidebar.qml \
+    view/HostTab.qml \
+    view/ClientTab.qml
 
 win32: LIBS += -L$$PWD/../libmpv/ -lmpv
 

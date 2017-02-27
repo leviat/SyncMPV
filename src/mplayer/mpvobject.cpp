@@ -84,6 +84,7 @@ MpvObject::MpvObject(QQuickItem * parent)
 
     eventEmitter = new MpvEventEmitter(mpv, this);
     eventEmitter->start();
+    waitingForBuffer = false;
 
 }
 
@@ -217,6 +218,8 @@ mplayer::state MpvObject::updateState() {
         state.playState = PAUSE;
     else if (coreIdleProperty.toBool() == false)
         state.playState = PLAY;
+    else if (waitingForBuffer)
+        state.playState = BUFFERING;
     else
         state.playState = PAUSE;
 
@@ -289,6 +292,16 @@ void MpvObject::switchPause() {
         return;
 
     setProperty("pause", !pausedProperty.toBool());
+}
+
+void MpvObject::waitForBuffer() {
+    waitingForBuffer = true;
+    setProperty("pause", true);
+}
+
+void MpvObject::playAfterBuffering() {
+    waitingForBuffer = false;
+    setProperty("pause", false);
 }
 
 } //namespace mplayer

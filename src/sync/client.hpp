@@ -22,7 +22,9 @@ private:
     QString m_hostAddress;
     bool m_speedAdjusted;
     bool m_speedIncreased;
-    double m_speed = 1.0;
+    double m_speed;
+    mplayer::mediumInfo m_mediumInfo;
+    quint16 m_clientPort;
 
 public:
     explicit Client(QObject *parent = 0);
@@ -43,6 +45,7 @@ public slots:
     void setState(mplayer::state state);
     void sendPlayerState(mplayer::state state);
     void setMpv(mplayer::MpvObject* mpvInstance);
+    void setMediumInfo(mplayer::mediumInfo mediumInfo);
 
 };
 

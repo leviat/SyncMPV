@@ -30,11 +30,14 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QHash<int, QByteArray> roleNames() const;
     void addClientInfo(ClientInfo* clientInfo);
-    void setName(QHostAddress address, QString name);
-    void setBufferProgress(QHostAddress address, quint16 bufferProgress);
-    void setPlayProgress(QHostAddress address, quint16 playProgress);
-    void setBufferString(QHostAddress address, QString bufferString);
-    void removeClientInfo(QHostAddress address);
+    void setName(QHostAddress address, quint16 port, QString name);
+    void setBufferProgress(QHostAddress address, quint16 port, quint16 bufferProgress);
+    void setPlayProgress(QHostAddress address, quint16 port, quint16 playProgress);
+    void setBufferString(QHostAddress address, quint16 port, QString bufferString);
+    void removeClientInfo(QHostAddress address, quint16 port);
+
+private:
+    int find(QHostAddress address, quint16 port);
 
 
 };
