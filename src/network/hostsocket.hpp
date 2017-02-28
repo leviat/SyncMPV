@@ -44,7 +44,7 @@ signals:
     void newData(QTcpSocket* client);
 
 public slots:
-    void openConnection();
+    void openConnection(quint16 port);
     void closeConnection();
     void broadcast(QByteArray& packet);
 

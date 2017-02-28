@@ -38,7 +38,7 @@ public slots:
     void broadcastPlayerState(mplayer::state state);
     void processPackage();
     void addClient(QTcpSocket* client);
-    void openConnection();
+    void openConnection(quint16 port);
     void closeConnection();
     void removeClient(QHostAddress address, quint16 port);
     void setMediumInfo(mplayer::mediumInfo mediumInfo);

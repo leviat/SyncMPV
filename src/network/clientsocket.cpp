@@ -49,14 +49,14 @@ ClientSocket::~ClientSocket() {
 }
 
 /*!
- * \brief Connects the socket to the \a address.
+ * \brief Binds the socket to the \a clientPort and connects it to the \a hostPort at the \a address.
  */
-void ClientSocket::connect(QHostAddress& address) {
+void ClientSocket::connect(QString address, quint16 hostPort, quint16 clientPort) {
     if (socket.state() != QTcpSocket::UnconnectedState)
         return;
 
-    socket.bind(8001);
-    socket.connectToHost(address, 8000);
+    socket.bind(clientPort);
+    socket.connectToHost(address, hostPort);
     socket.setSocketOption(QTcpSocket::LowDelayOption, 1);
 
 }

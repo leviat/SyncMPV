@@ -31,7 +31,7 @@ signals:
     void newData();
 
 public slots:
-    void connect(QHostAddress& address);
+    void connect(QString address, quint16 hostPort, quint16 clientPort);
     void disconnect();
     void send(QByteArray &packet);
 

@@ -41,11 +41,11 @@ HostSocket::~HostSocket() {
 }
 
 /*!
- * \brief Opens the connection on Port 8000.
+ * \brief Opens the connection on the \a port.
  */
-void HostSocket::openConnection() {
+void HostSocket::openConnection(quint16 port) {
     if (status != CONNECTION_OPEN) {
-        if (!server.listen(QHostAddress::Any, 8000)) {
+        if (!server.listen(QHostAddress::Any, port)) {
             emit serverError(); // TODO: dont forget to connect this signal
             qDebug() << "Could not open server";
             return;

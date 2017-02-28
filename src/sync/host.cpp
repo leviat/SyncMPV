@@ -18,8 +18,8 @@ Host::Host(QObject *parent) : QObject (parent)
     QObject::connect(&m_socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
 }
 
-void Host::openConnection() {
-    m_socket.openConnection();
+void Host::openConnection(quint16 port) {
+    m_socket.openConnection(port);
 }
 
 void Host::closeConnection() {
@@ -61,7 +61,6 @@ void Host::processPackage() {
         }
 
         QString bufferString = QString("buffer: %1s+%2MB").arg((int)playerState.demuxerCache).arg((int)playerState.additionalCache/1024);
-        qDebug() << bufferString;
         m_clientInfoModel->setBufferProgress(client->peerAddress(), client->peerPort(), bufferProgress);
         m_clientInfoModel->setPlayProgress(client->peerAddress(), client->peerPort(), playProgress);
         m_clientInfoModel->setBufferString(client->peerAddress(), client->peerPort(), bufferString);
@@ -84,7 +83,7 @@ void Host::addClient(QTcpSocket* client) {
     clientInfo->setBufferString("buffer: 0s+0kB");
     m_clientInfoModel->addClientInfo(clientInfo);
 
-    qDebug() << clientInfo->address();
+    qDebug() << "New client: " << clientInfo->address();
     QObject::connect(client, &QTcpSocket::readyRead, this, &Host::processPackage);
     QObject::connect(client, &QTcpSocket::disconnected, this, [=]() { removeClient(client->peerAddress(), client->peerPort()) ;});
 }

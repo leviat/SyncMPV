@@ -202,7 +202,6 @@ double MpvObject::volume() {
 */
 void MpvObject::setProperty(const QString property, const QVariant value)
 {
-    qDebug() << property << value;
     mpv::qt::set_property_variant(mpv, property, value);
 }
 

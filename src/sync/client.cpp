@@ -17,11 +17,10 @@ Client::Client(QObject *parent) : QObject(parent)
     m_speed = 1.0;
 }
 
-void Client::connect(){
+void Client::connect(QString address, quint16 hostPort, quint16 clientPort){
     QObject::connect(&m_socket, &network::ClientSocket::connected, this, &Client::sendName);
 
-    QHostAddress host(m_hostAddress);
-    m_socket.connect(host);
+    m_socket.connect(address, hostPort, clientPort);
 }
 
 void Client::disconnect() {

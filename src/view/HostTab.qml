@@ -16,14 +16,55 @@ Rectangle {
         anchors.fill: parent
         spacing: 5
 
-        Button {
-            id: host_button
-            width: 70
-            height: 20
-            text: qsTr("Host")
-            highlighted: false
-            anchors.left: parent.left
-            anchors.leftMargin: 15
+        Item {
+            id: item1
+            Layout.minimumHeight: 40
+            Layout.fillWidth: true
+
+            Text {
+                id: portDescriptor
+                text: qsTr("Port:")
+
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                anchors.verticalCenter: portTextFrame.verticalCenter
+                font.pixelSize: 12
+            }
+
+            Rectangle {
+                id: portTextFrame
+                border.width: 1
+
+                width: 70
+                height: 25
+                color: "#ffffff"
+                anchors.left: portDescriptor.right
+                anchors.leftMargin: 10
+
+                TextField {
+                    id: portText
+                    placeholderText: "<= 65535"
+                    text: "8000"
+                    validator: IntValidator {bottom:0; top:65535}
+
+                    anchors.fill: parent
+                    antialiasing: true
+                    font.pointSize: 8
+                }
+            }
+
+            Button {
+                id: host_button
+                width: 70
+                height: 20
+                text: qsTr("Host")
+                highlighted: false
+                anchors.left: portTextFrame.right
+                anchors.leftMargin: 15
+                anchors.verticalCenter: portTextFrame.verticalCenter
+            }
+
+
         }
 
         ListView {
@@ -106,13 +147,14 @@ Rectangle {
             model: clientInfoModel
         }
 
+
     }
 
     Connections {
         target: host_button
         onClicked: {
             host_button.enabled = false
-            host.openConnection()
+            host.openConnection(portText.text)
         }
 
     }

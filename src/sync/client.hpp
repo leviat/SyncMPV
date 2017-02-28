@@ -40,7 +40,7 @@ signals:
     void command(QVariant params);
 
 public slots:
-    void connect();
+    void connect(QString address, quint16 hostPort, quint16 clientPort);
     void disconnect();
     void setState(mplayer::state state);
     void sendPlayerState(mplayer::state state);
