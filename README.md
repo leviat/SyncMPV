@@ -5,7 +5,7 @@ SyncMPV is based on the mpv media player and synchronizes the status of several 
 
 ## Host
 
-1. Activate Host mode 
+1. Activate Host mode.
 ![Host Step 01](./img/host01.jpg)
 
 2. Set the port on which the clients can connect to the host application. Make sure that the port can be reached from the outside. You must open the ports in your router settings and allow network connections if prompted by your firewall.
