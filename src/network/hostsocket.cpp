@@ -15,16 +15,6 @@ namespace network {
 */
 
 /*!
-  \fn void HostSocket::serverError()
-  \brief Is emitted when the server could not be properly opened.
-*/
-
-/*!
-  \fn void HostSocket::newClient(QTcpSocket* client);
-  \brief Is emitted when a new \a client connects to the HostSocket.
-*/
-
-/*!
  * \brief Constructs a closed HostSocket.
  */
 HostSocket::HostSocket()
@@ -89,5 +79,17 @@ void HostSocket::closeConnection() {
         status = CONNECTION_CLOSED;
     }
 }
+
+// Misc. documentation
+
+/*!
+  \fn void HostSocket::serverError()
+  \brief Is emitted when the server could not be properly opened.
+*/
+
+/*!
+  \fn void HostSocket::newClient(QTcpSocket* client);
+  \brief Is emitted when a new \a client connects to the HostSocket.
+*/
 
 }

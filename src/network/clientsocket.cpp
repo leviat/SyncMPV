@@ -17,16 +17,6 @@ namespace network {
 */
 
 /*!
-  \fn void ClientSocket::connected()
-  \brief Is emitted when the socket successfully connects to the peer.
-*/
-
-/*!
-  \fn void ClientSocket::newData()
-  \brief Is emitted when the socket received new data from the peer.
-*/
-
-/*!
  * \brief Constructs an unconnected ClientSocket.
  */
 
@@ -90,5 +80,17 @@ void ClientSocket::disconnect() {
     socket.close();
 }
 
+// Misc. documentation
+
+
+/*!
+  \fn void ClientSocket::connected()
+  \brief Is emitted when the socket successfully connects to the peer.
+*/
+
+/*!
+  \fn void ClientSocket::newData()
+  \brief Is emitted when the socket received new data from the peer.
+*/
 
 } // namespace network

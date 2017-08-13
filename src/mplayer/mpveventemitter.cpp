@@ -104,3 +104,23 @@ void MpvEventEmitter::initiateShutdown() {
     \fn void MpvEventEmitter::volumeChanged()
     \brief Is emitted when the volume has changed.
 */
+
+/*!
+ * \fn void MpvEventEmitter::stateChanged()
+ * \brief Is emitted when the player state has changed in a way that requires re-sync to all clients.
+ */
+
+/*!
+ * \fn void MpvEventEmitter::mediumChanged()
+ * \brief Is emitted when another medium is loaded.
+ */
+
+/*!
+ * \fn void MpvEventEmitter::pausedChanged()
+ * \brief Is emitted when the player is paused/unpaused.
+ */
+
+/*!
+ * \fn void MpvEventEmitter::bufferChanged()
+ * \brief Is emitted when the buffer progress changes.
+ */

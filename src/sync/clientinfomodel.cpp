@@ -8,8 +8,7 @@ namespace sync {
 
 ClientInfoModel::ClientInfoModel(QObject *parent) : QAbstractTableModel(parent)
 {
-    // Some test code
-
+    /* -- Debug dummies
     ClientInfo* cInfo = new ClientInfo();
     cInfo->setAddress(QHostAddress("127.0.0.1"));
     cInfo->setName("Leo");
@@ -27,6 +26,7 @@ ClientInfoModel::ClientInfoModel(QObject *parent) : QAbstractTableModel(parent)
     cInfo->setPlayProgress(20);
     cInfo->setBufferString("buffer: 2s+100kB");
     addClientInfo(cInfo);
+    -- */
 }
 
 QHash<int, QByteArray> ClientInfoModel::roleNames() const {

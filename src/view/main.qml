@@ -8,7 +8,7 @@ import QtQuick.Controls 2.1
 
 ApplicationWindow {
     id: window
-    title: "Leo of the Storm"
+    title: "SyncMpv"
     width: 1280
     height: 720
     visible: true

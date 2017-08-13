@@ -244,6 +244,10 @@ mplayer::state MpvObject::updateState() {
     return state;
 }
 
+/*!
+ * \brief Returns information about the current medium and emits a signal that information might have changed.
+ */
+
 mediumInfo MpvObject::updateMediumInfo() {
     mediumInfo info;
     QVariant lengthProperty = mpv::qt::get_property(mpv, "duration");
@@ -264,6 +268,10 @@ mediumInfo MpvObject::updateMediumInfo() {
     return info;
 }
 
+/*!
+ * \brief Returns if the player is paused.
+ */
+
 bool MpvObject::paused() {
     QVariant pausedProperty = mpv::qt::get_property(mpv, "pause");
 
@@ -272,6 +280,10 @@ bool MpvObject::paused() {
     else
         return pausedProperty.toBool();
 }
+
+/*!
+ * \brief Returns how much of the remaining medium has been buffered in percent from [0.00 - 100.00]
+ */
 
 double MpvObject::bufferProgress() {
     mediumInfo medium = updateMediumInfo();
@@ -284,6 +296,10 @@ double MpvObject::bufferProgress() {
     return progress * 100;
 }
 
+/*!
+ * \brief Toggles the player from pause to unpause and vice-versa.
+ */
+
 void MpvObject::switchPause() {
     QVariant pausedProperty = mpv::qt::get_property(mpv, "pause");
 
@@ -293,15 +309,56 @@ void MpvObject::switchPause() {
     setProperty("pause", !pausedProperty.toBool());
 }
 
+/*!
+ * \brief Tells the player to pause and wait for sufficient buffer.
+ */
+
 void MpvObject::waitForBuffer() {
     waitingForBuffer = true;
     setProperty("pause", true);
 }
 
+/*!
+ * \brief Resumes playing after sufficient buffering.
+ */
+
 void MpvObject::playAfterBuffering() {
     waitingForBuffer = false;
     setProperty("pause", false);
 }
+
+// Misc. documentation
+
+/*!
+    \fn void MpvObject::playtimeChanged()
+    \brief Is emitted when the playtime has changed.
+*/
+
+/*!
+    \fn void MpvObject::volumeChanged()
+    \brief Is emitted when the volume has changed.
+*/
+
+/*!
+ * \fn void MpvObject::stateChanged(mplayer::state newState)
+ * \brief Is emitted when the player state has changed to a \a newState that requires re-sync to all clients.
+ */
+
+/*!
+ * \fn void MpvObject::mediumChanged(mplayer::mediumInfo mediumInfo)
+ * \brief Is emitted when another medium with is loaded. Provides \a mediumInfo about the new medium.
+ */
+
+/*!
+ * \fn void MpvObject::pausedChanged()
+ * \brief Is emitted when the player is paused/unpaused.
+ */
+
+/*!
+ * \fn void MpvObject::bufferProgressChanged()
+ * \brief Is emitted when the buffer progress changes.
+ */
+
 
 } //namespace mplayer
 
