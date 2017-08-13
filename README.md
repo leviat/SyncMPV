@@ -6,12 +6,15 @@ SyncMPV is based on the mpv media player and synchronizes the status of several 
 ## Host
 
 1. Activate Host mode.
+
 ![Host Step 01](./img/host01.jpg)
 
 2. Set the port on which the clients can connect to the host application. Make sure that the port can be reached from the outside. You must open the ports in your router settings and allow network connections if prompted by your firewall.
+
 ![Host Step 02](./img/host02.jpg)
 
 3. Clients should now be able to connect to you. The Sidebar contains information about the buffer status (yellow) of your clients. Playing pauses whenever you or one of the clients run out of buffer. The green bar indicates their play progress. It should be the same as yours if syncing works correctly.
+
 ![Host Step 03](./img/host03.jpg)
 
 ## Client
