@@ -47,6 +47,26 @@ namespace mplayer {
 */
 
 /*!
+    \enum playState
+
+    \value PLAY
+           The player is currently playing..
+    \value PAUSE
+           The player is paused.
+*/
+
+/*!
+    \property MpvObject::bufferProgress
+    \brief The current buffering progress in percent from [0.00 - 100.0]
+*/
+
+/*!
+    \property MpvObject::paused
+    \brief If the player is paused.
+*/
+
+
+/*!
     \brief Constructs the underlying mpv player.
 
     The constructor sets some default properties for the mpv player.
@@ -213,12 +233,8 @@ mplayer::state MpvObject::updateState() {
 
     QVariant coreIdleProperty = mpv::qt::get_property(mpv, "core-idle");
 
-    if (isError(coreIdleProperty))
-        state.playState = PAUSE;
-    else if (coreIdleProperty.toBool() == false)
+    if (coreIdleProperty.toBool() == false)
         state.playState = PLAY;
-    else if (waitingForBuffer)
-        state.playState = BUFFERING;
     else
         state.playState = PAUSE;
 
@@ -358,7 +374,6 @@ void MpvObject::playAfterBuffering() {
  * \fn void MpvObject::bufferProgressChanged()
  * \brief Is emitted when the buffer progress changes.
  */
-
 
 } //namespace mplayer
 

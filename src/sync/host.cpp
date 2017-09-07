@@ -50,7 +50,7 @@ void Host::broadcastPlayerState(mplayer::state state) {
 }
 
 /*!
- * \brief Processes an incoming package. Only call it from the \class HostSocket.
+ * \brief Processes an incoming package. Only call it from the network::HostSocket .
  */
 void Host::processPackage() {
     QTcpSocket* client = reinterpret_cast<QTcpSocket*>(sender());

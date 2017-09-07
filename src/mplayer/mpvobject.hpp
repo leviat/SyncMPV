@@ -17,8 +17,7 @@ namespace mplayer {
 
 enum playState {
     PLAY,
-    PAUSE,
-    BUFFERING //deprecated
+    PAUSE
 };
 
 struct state {
@@ -71,7 +70,6 @@ public:
     double percentPlaytime();
     double bufferProgress();
     bool paused();
-    mplayer::state state();
 
 private:
     static void on_update(void *ctx);

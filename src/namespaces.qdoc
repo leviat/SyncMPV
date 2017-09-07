@@ -3,3 +3,15 @@
   \inmodule SyncMPV
   \brief Contains the media player using mpv.
 */
+
+/*!
+  \namespace network
+  \inmodule SyncMPV
+  \brief Contains low level classes for the network connection.
+*/
+
+/*!
+  \namespace sync
+  \inmodule SyncMPV
+  \brief Contains classes to synchronize the players.
+*/

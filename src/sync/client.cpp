@@ -28,7 +28,7 @@ Client::Client(QObject *parent) : QObject(parent)
 }
 
 /*!
- * \brief Establishes a connection between the host at \a address and \a hostPort and our \a clientPort..
+ * \brief Establishes a connection between the host at \a address and \a hostPort and our \a clientPort.
  */
 void Client::connect(QString address, quint16 hostPort, quint16 clientPort, QString name){
     m_name = name;
@@ -58,7 +58,7 @@ void Client::sendName() {
 }
 
 /*!
- * \brief Processes an incoming package. Only call this from the client's \class ClientSocket.
+ * \brief Processes an incoming package. Only call this from the client's network::ClientSocket .
  */
 void Client::processPackage() {
     network::ClientSocket* client = reinterpret_cast<network::ClientSocket*>(sender());
@@ -141,7 +141,7 @@ void Client::setMpv(mplayer::MpvObject *mpvInstance) {
 }
 
 /*!
- * \brief Sets the current player state to \a state..
+ * \brief Sets the current player state to \a state.
  */
 void Client::setState(mplayer::state state) {
     m_currentState = state;
