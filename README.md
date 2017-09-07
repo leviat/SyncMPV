@@ -21,6 +21,6 @@ SyncMPV is based on the mpv media player and synchronizes the status of several 
 
 1. Activate Client mode
 
-2. Insert the host's IP (IPv4 or IPv6) and port. Click on connect.
+2. Specify a name which the host can identify you with. Insert the host's IP (IPv4 or IPv6) and port. Click on connect.
 
 3. The console provides information if connection could be established and some helpful error messages if not.
