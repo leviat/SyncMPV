@@ -7,6 +7,15 @@
 
 namespace sync {
 
+/*!
+    \class sync::Client
+    \inmodule sync
+    \brief The client synchronizes its player state with a host.
+*/
+
+/*!
+ * \brief Constructs a Client.
+ */
 Client::Client(QObject *parent) : QObject(parent)
 {
     m_currentState = {mplayer::PAUSE, 0};
@@ -15,28 +24,42 @@ Client::Client(QObject *parent) : QObject(parent)
     m_speedAdjusted = false;
     m_speedIncreased = false;
     m_speed = 1.0;
+    m_name = "";
 }
 
-void Client::connect(QString address, quint16 hostPort, quint16 clientPort){
-    QObject::connect(&m_socket, &network::ClientSocket::connected, this, &Client::sendName);
+/*!
+ * \brief Establishes a connection between the host at \a address and \a hostPort and our \a clientPort..
+ */
+void Client::connect(QString address, quint16 hostPort, quint16 clientPort, QString name){
+    m_name = name;
 
+    QObject::connect(&m_socket, &network::ClientSocket::connected, this, &Client::sendName);
     m_socket.connect(address, hostPort, clientPort);
 }
 
+/*!
+ * \brief Closes the connection to the host.
+ */
 void Client::disconnect() {
     m_socket.disconnect();
 }
 
+/*!
+ * \brief Sends the current known name to the host.
+ */
 void Client::sendName() {
     QObject::disconnect(&m_socket, &network::ClientSocket::connected, this, &Client::sendName);
     QObject::connect(&m_socket, &network::ClientSocket::newData, this, &Client::processPackage);
     QObject::connect(m_mpv, &mplayer::MpvObject::stateChanged, this, &sync::Client::sendPlayerState);
 
     QByteArray buffer;
-    sync::Protocol::toInitPacket(buffer, "client_moop");
+    sync::Protocol::toInitPacket(buffer, m_name);
     m_socket.send(buffer);
 }
 
+/*!
+ * \brief Processes an incoming package. Only call this from the client's \class ClientSocket.
+ */
 void Client::processPackage() {
     network::ClientSocket* client = reinterpret_cast<network::ClientSocket*>(sender());
     QByteArray packetBytes = client->readAll();
@@ -50,6 +73,9 @@ void Client::processPackage() {
 
 }
 
+/*!
+ * \brief Syncs the player's Play/Pause state with the host's \a playerState.
+ */
 void Client::adjustPlayState(mplayer::state playerState) {
     if (playerState.playState != mplayer::PLAY && m_currentState.playState == mplayer::PLAY) {
         emit propertyChange("pause", true);
@@ -61,6 +87,9 @@ void Client::adjustPlayState(mplayer::state playerState) {
     }
 }
 
+/*!
+ * \brief Adjusts the player's speed to keep in sync with the host's \a playerState.
+ */
 void Client::adjustSyncSpeed(mplayer::state playerState){
     double timeDiff = playerState.playTime - m_currentState.playTime;
     // Only seek for sync when we are totally off
@@ -91,10 +120,16 @@ void Client::adjustSyncSpeed(mplayer::state playerState){
     }
 }
 
+/*!
+ * \brief Updates the information about the played medium with the \a mediumInfo.
+ */
 void Client::setMediumInfo(mplayer::mediumInfo mediumInfo) {
     m_mediumInfo = mediumInfo;
 }
 
+/*!
+ * \brief Sets the used mpv instance to \a mpvInstance.
+ */
 void Client::setMpv(mplayer::MpvObject *mpvInstance) {
     m_mpv = mpvInstance;
 
@@ -105,10 +140,16 @@ void Client::setMpv(mplayer::MpvObject *mpvInstance) {
 
 }
 
+/*!
+ * \brief Sets the current player state to \a state..
+ */
 void Client::setState(mplayer::state state) {
     m_currentState = state;
 }
 
+/*!
+ * \brief Send the client's \a state to the host.
+ */
 void Client::sendPlayerState(mplayer::state state) {
     QByteArray packet;
     sync::Protocol::toSyncPacket(packet, state);

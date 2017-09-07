@@ -1,6 +1,6 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import syncmpv 1.0
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 
 Rectangle {
@@ -16,6 +16,45 @@ Rectangle {
         id: clientColumn
         anchors.fill: parent
         spacing: 5
+
+        Item {
+            id: clientNameRow
+            Layout.preferredHeight: clientNameTextFrame.height
+            Layout.fillWidth: true
+
+            Text {
+                id: clientNameDescriptor
+                text: qsTr("Client name:")
+
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                anchors.verticalCenter: clientNameTextFrame.verticalCenter
+                font.pixelSize: 12
+            }
+
+            Rectangle {
+                id: clientNameTextFrame
+                border.width: 1
+
+                width: 70
+                height: 25
+                color: "#ffffff"
+                anchors.left: clientNameDescriptor.right
+                anchors.leftMargin: 5
+
+                TextField {
+                    id: clientNameText
+                    placeholderText: "ClientX"
+                    text: ""
+
+                    anchors.fill: parent
+                    antialiasing: true
+                    font.pointSize: 8
+                }
+            }
+
+        }
+
 
         Item {
             id: clientPortRow
@@ -147,14 +186,17 @@ Rectangle {
         Item {
             Layout.fillHeight: true
         }
+
     }
+
 
     Connections {
         target: client_button
         onClicked: {
             client_button.enabled = false
-            client.connect(hostIPText.text, hostPortText.text, clientPortText.text)
+            client.connect(hostIPText.text, hostPortText.text, clientPortText.text, clientNameText.text)
         }
 
     }
+
 }

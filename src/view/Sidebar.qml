@@ -1,10 +1,10 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls.Styles 1.4
 import syncmpv 1.0
 
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.0
 
 
 Rectangle {
@@ -71,12 +71,12 @@ Rectangle {
                 }
             }
 
-            ToolSeparator {
-                y: 0
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-                orientation: Qt.Horizontal
-            }
+            //ToolSeparator {
+            //    y: 0
+            //    Layout.fillWidth: true
+            //    Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            //    orientation: Qt.Horizontal
+            //}
 
             Item {
                 id: modeArea

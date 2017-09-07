@@ -6,6 +6,12 @@
 
 namespace sync {
 
+/*!
+    \class sync::ClientInfoModel
+    \inmodule sync
+    \brief The ClientInfoModel holds a table of ClientInfos to display in the host's sidebar.
+*/
+
 ClientInfoModel::ClientInfoModel(QObject *parent) : QAbstractTableModel(parent)
 {
     /* -- Debug dummies

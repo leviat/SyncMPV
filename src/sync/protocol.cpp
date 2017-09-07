@@ -8,6 +8,12 @@
 
 namespace sync {
 
+/*!
+    \class sync::Protocol
+    \inmodule sync
+    \brief Implementation of the network protocol to transfer the player's state.
+*/
+
 Protocol::Protocol() {
 
 }

@@ -17,6 +17,7 @@
 #include <QMetaObject>
 #include <QQmlContext>
 #include <QGenericArgument>
+#include <QDir>
 
 #include <QtGui/QOpenGLFramebufferObject>
 
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
     sync::ClientInfoModel model;
 
     engine.rootContext()->setContextProperty("clientInfoModel", &model);
-    engine.load("../src/view/main.qml");
+    engine.load(QCoreApplication::applicationDirPath() + "/../../src/view/main.qml");
 
     mplayer::MpvObject* mpv = engine.rootObjects().first()->findChild<mplayer::MpvObject*>("mpv");
     sync::Host* host = engine.rootObjects().first()->findChild<sync::Host*>("host");

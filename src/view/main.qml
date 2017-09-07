@@ -1,10 +1,10 @@
-import QtQuick 2.5
+import QtQuick 2.7
 
 import syncmpv 1.0
 
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.0
 
 ApplicationWindow {
     id: window
@@ -152,8 +152,8 @@ ApplicationWindow {
                 y: 44
                 width: 100
                 height: 22
-                anchors.left: parent.left
-                anchors.leftMargin: 5
+                anchors.right: parent.right
+                anchors.rightMargin: 60
                 stepSize: 1
                 from: 0
                 to: 100
@@ -191,19 +191,28 @@ ApplicationWindow {
                     id: volume_text
                     y: 4
                     text: volume_slider.value.toFixed(0) + "\%"
-                    anchors.left: parent.right
-                    anchors.leftMargin: 10
+                    anchors.right: parent.right
+                    anchors.rightMargin: -40
                     font.pixelSize: 12
                 }
             }
 
             Button {
                 id: pauseButton
-                x: 273
                 y: 34
                 text: qsTr("Pause")
-                checked: mpv.paused
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                visible: !mpv.paused
 
+            }
+
+            Button {
+                id: playButton
+                x: 10
+                y: 34
+                text: qsTr("Play")
+                visible: mpv.paused
             }
         }
 
@@ -271,7 +280,12 @@ ApplicationWindow {
 
     Connections {
         target: pauseButton
-        onClicked: mpv.switchPause(true)
+        onClicked: mpv.switchPause()
+    }
+
+    Connections {
+        target: playButton
+        onClicked: mpv.switchPause()
     }
 
 }

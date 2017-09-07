@@ -11,27 +11,47 @@
 
 namespace sync {
 
+/*!
+    \class sync::Host
+    \inmodule sync
+    \brief The host broadcasts its player state continuously to all connected clients.
+*/
 
+/*!
+ * \brief Constructs a Host.
+ */
 Host::Host(QObject *parent) : QObject (parent)
 {
     m_clientInfoModel = new ClientInfoModel;
     QObject::connect(&m_socket, SIGNAL(newClient(QTcpSocket*)), this, SLOT(addClient(QTcpSocket*)));
 }
 
+/*!
+ * \brief Opens the connection at \a port.
+ */
 void Host::openConnection(quint16 port) {
     m_socket.openConnection(port);
 }
 
+/*!
+    * \brief Closes the connection..
+    */
 void Host::closeConnection() {
     m_socket.closeConnection();
 }
 
+/*!
+ * \brief Broadcasts the \a state to all clients.
+ */
 void Host::broadcastPlayerState(mplayer::state state) {
     QByteArray packet;
     sync::Protocol::toSyncPacket(packet, state);
     m_socket.broadcast(packet);
 }
 
+/*!
+ * \brief Processes an incoming package. Only call it from the \class HostSocket.
+ */
 void Host::processPackage() {
     QTcpSocket* client = reinterpret_cast<QTcpSocket*>(sender());
     QByteArray packetBytes = client->readAll();
@@ -76,6 +96,9 @@ void Host::processPackage() {
 
 }
 
+/*!
+ * \brief Adds a new \a client to the broadcasting list.
+ */
 void Host::addClient(QTcpSocket* client) {
     ClientInfo* clientInfo = new ClientInfo();
     clientInfo->setAddress(client->peerAddress());
@@ -88,10 +111,16 @@ void Host::addClient(QTcpSocket* client) {
     QObject::connect(client, &QTcpSocket::disconnected, this, [=]() { removeClient(client->peerAddress(), client->peerPort()) ;});
 }
 
+/*!
+ * \brief Removes a client with the \a address and \a port from the broadcasting list..
+ */
 void Host::removeClient(QHostAddress address, quint16 port) {
     m_clientInfoModel->removeClientInfo(address, port);
 }
 
+/*!
+ * \brief Sets a new \a clientInfoModel.
+ */
 void Host::setClientInfoModel(ClientInfoModel* clientInfoModel) {
     if (m_clientInfoModel != nullptr && clientInfoModel != m_clientInfoModel) {
         delete m_clientInfoModel;
@@ -99,12 +128,18 @@ void Host::setClientInfoModel(ClientInfoModel* clientInfoModel) {
     }
 }
 
+/*!
+ * \brief Updates the current information about the played medium with \a mediumInfo..
+ */
 void Host::setMediumInfo(mplayer::mediumInfo mediumInfo) {
     m_mediumInfo = mediumInfo;
 }
 
-void Host::setMpv(mplayer::MpvObject *mpv_instance) {
-    m_mpv = mpv_instance;
+/*!
+ * \brief Sets the used \a mpvInstance.
+ */
+void Host::setMpv(mplayer::MpvObject *mpvInstance) {
+    m_mpv = mpvInstance;
     QObject::connect(m_mpv, &mplayer::MpvObject::stateChanged, this, &Host::broadcastPlayerState);
     QObject::connect(m_mpv, &mplayer::MpvObject::mediumChanged, this, &Host::setMediumInfo);
     QObject::connect(this, &Host::waitForBuffer, m_mpv, &mplayer::MpvObject::waitForBuffer);

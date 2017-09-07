@@ -1,4 +1,5 @@
 QT += qml quick
+QT += quickcontrols2
 
 CONFIG += console
 CONFIG += c++11

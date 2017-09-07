@@ -28,7 +28,7 @@ private:
 public:
     Host(QObject *parent = 0);
     void setClientInfoModel(ClientInfoModel* clientInfoModel);
-    void setMpv(mplayer::MpvObject* mpv_instance);
+    void setMpv(mplayer::MpvObject* mpvInstance);
 
 signals:
     void waitForBuffer();

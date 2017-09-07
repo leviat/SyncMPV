@@ -25,6 +25,7 @@ private:
     double m_speed;
     mplayer::mediumInfo m_mediumInfo;
     quint16 m_clientPort;
+    QString m_name;
 
 public:
     explicit Client(QObject *parent = 0);
@@ -40,7 +41,7 @@ signals:
     void command(QVariant params);
 
 public slots:
-    void connect(QString address, quint16 hostPort, quint16 clientPort);
+    void connect(QString address, quint16 hostPort, quint16 clientPort, QString name);
     void disconnect();
     void setState(mplayer::state state);
     void sendPlayerState(mplayer::state state);

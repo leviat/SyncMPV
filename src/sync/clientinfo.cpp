@@ -2,6 +2,12 @@
 
 namespace sync {
 
+/*!
+    \class sync::ClientInfo
+    \inmodule sync
+    \brief The ClientInfo holds information to display in the host's sidebar.
+*/
+
 ClientInfo::ClientInfo(QObject *parent) : QObject(parent) {
 
 }
