@@ -4,13 +4,9 @@ sudo: required
 dist: trusty
 
 before_install:
-<<<<<<< HEAD
     - wget https://download.qt.io/official_releases/qt/5.8/5.8.0/qt-opensource-linux-x64-5.8.0.run
     - chmod +x qt-opensource-linux-x64-5.7.0.run
     - ./qt-opensource-linux-x64-5.7.0.run --script qt-installer-noninteractive.qs
-=======
-    - sudo do-release-upgrade -f DistUpgradeViewNonInteractive
->>>>>>> eee193ec492baae874a53434e7c74c3fb9c3d5aa
     - sudo add-apt-repository ppa:mc3man/testing6 -y
     - sudo apt-get -qq update
     - sudo apt-get -qq install -y libmpv-dev
