@@ -1,6 +1,6 @@
 QT += qml quick
 
-greaterThan(QT_MAJOR_VERSION, 5) && greaterThan(QT_MINOR_VERSION_VERSION, 7) {
+qtHaveModule(quickcontrols2) {
     QT += quickcontrols2
 }
 
