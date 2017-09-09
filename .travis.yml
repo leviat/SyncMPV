@@ -1,9 +1,10 @@
 language: cpp
 compiler: gcc
 sudo: required
-dist: zesty
+dist: trusty
 
 before_install:
+    - sudo do-release-upgrade -f DistUpgradeViewNonInteractive
     - sudo add-apt-repository ppa:mc3man/testing6 -y
     - sudo apt-get -qq update
     - sudo apt-get -qq install -y libmpv-dev
